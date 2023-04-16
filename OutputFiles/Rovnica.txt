@@ -1,0 +1,216 @@
+
+##########################################################
+###  Vstupný súbor Dataparametre.txt 1. riadok         ###
+##########################################################
+
+<------------------------------------------>
+
+
+Rovnica: 1 * x^3 + 0 * x^2 + -2 * x + 1 = 0
+
+
+----------------------------------------------------
+             Separácia reálnych koreňov             
+----------------------------------------------------
+
+Počet reálnych koreňov: 3
+Intervaly (ľavá hodnota reprezentuje doľnú hranicu intervalu, pravá hodnota reprezetnuje hornú hranicu intervalu):
+1. koreň: [-3.000000, -1.000000]
+2. koreň: [0.500000, 0.700000]
+3. koreň: [0.800000, 1.400000]
+
+
+----------------------------------------------------
+                  Metóda bisekcie                   
+----------------------------------------------------
+
+Rovnica: 1 * x^3 + 0 * x^2 + -2 * x + 1
+
+
+1. Interval: [-3, -1]
+
+Koreň: -1.60938
+Funkčná hodnota pre koreň: 0.0503273
+Epsilon (presnosť): 0.01
+Počet krokov: 7
+Interval, v ktorom bol najdený koreň: [-1.625, -1.60938]
+Velkosť intervalu: 0.015625
+Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = 0.007812500
+
+2. Interval: [0.5, 0.7]
+
+Koreň: 0.6125
+Funkčná hodnota pre koreň: 0.0047832
+Epsilon (presnosť): 0.01
+Počet krokov: 4
+Interval, v ktorom bol najdený koreň: [0.6125, 0.625]
+Velkosť intervalu: 0.0125
+Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = 0.006250000
+
+3. Interval: [0.8, 1.4]
+
+Koreň: 1.00625
+Funkčná hodnota pre koreň: 0.00636743
+Epsilon (presnosť): 0.01
+Počet krokov: 5
+Interval, v ktorom bol najdený koreň: [0.9875, 1.00625]
+Velkosť intervalu: 0.01875
+Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = 0.009375000
+
+Čas bisekcie: 0.026503 sekúnd
+
+
+
+----------------------------------------------------
+                Newtonova metóda                     
+----------------------------------------------------
+
+Rovnica: 1 * x^3 + 0 * x^2 + -2 * x + 1
+
+
+1. Interval: [-3, -1]
+
+Koreň: -1.6183
+Funkčná hodnota pre koreň: -0.00158441
+epsilon: 0.01
+Počet krokov: 4
+Interval, v ktorom bol nájdený koreň: [-3, -1]
+Velkosť intervalu: 2
+Hodnota zastavenia: -0.003425960
+Odhad absolútnej chyby pre Newtonovu metódu je ER = 0.001583953.
+
+2. Interval: [0.5, 0.7]
+
+Koreň: 0.617391
+Funkčná hodnota pre koreň: 0.000549684
+epsilon: 0.01
+Počet krokov: 2
+Interval, v ktorom bol nájdený koreň: [0.5, 0.7]
+Velkosť intervalu: 0.2
+Hodnota zastavenia: -0.000072799
+Odhad absolútnej chyby pre Newtonovu metódu je ER = 0.001036679.
+
+3. Interval: [0.8, 1.4]
+
+Koreň: 1.00403
+Funkčná hodnota pre koreň: 0.00408031
+epsilon: 0.01
+Počet krokov: 3
+Interval, v ktorom bol nájdený koreň: [0.8, 1.4]
+Velkosť intervalu: 0.6
+Hodnota zastavenia: -0.000085729
+Odhad absolútnej chyby pre Newtonovu metódu je ER = 0.051201029.
+
+Čas newtonovej metódy: 0.096039 sekúnd
+<------------------------------------------>
+
+
+##########################################################
+###  Vstupný súbor Dataparametre.txt 2. riadok         ###
+##########################################################
+
+<------------------------------------------>
+
+
+Rovnica: 2.5 * x^3 + 3.5 * x^2 + 4 * x + 5 = 0
+
+
+----------------------------------------------------
+             Separácia reálnych koreňov             
+----------------------------------------------------
+
+Počet reálnych koreňov: 1
+Intervaly (ľavá hodnota reprezentuje doľnú hranicu intervalu, pravá hodnota reprezetnuje hornú hranicu intervalu):
+1. koreň: [-4.000000, 4.000000]
+
+
+----------------------------------------------------
+                  Metóda bisekcie                   
+----------------------------------------------------
+
+Rovnica: 2.5 * x^3 + 3.5 * x^2 + 4 * x + 5
+
+
+1. Interval: [-4, 4]
+
+Koreň: -1.34375
+Funkčná hodnota pre koreň: -0.121078
+Epsilon (presnosť): 0.02
+Počet krokov: 8
+Interval, v ktorom bol najdený koreň: [-1.34375, -1.3125]
+Velkosť intervalu: 0.03125
+Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = 0.015625000
+
+Čas bisekcie: 0.007459 sekúnd
+
+
+
+----------------------------------------------------
+                Newtonova metóda                     
+----------------------------------------------------
+
+Rovnica: 2.5 * x^3 + 3.5 * x^2 + 4 * x + 5
+
+
+1. Interval: [-4, 4]
+
+Interval nesplňal Furierove podmienky, pokračoval som s ďalším koreňom, ak existovala 
+
+Čas newtonovej metódy: 0.001339 sekúnd
+<------------------------------------------>
+
+
+##########################################################
+###  Vstupný súbor Dataparametre.txt 4. riadok         ###
+##########################################################
+
+<------------------------------------------>
+
+
+Rovnica: 2 * x^3 + 5 * x^2 + 4 * x + 5 = 0
+
+
+----------------------------------------------------
+             Separácia reálnych koreňov             
+----------------------------------------------------
+
+Počet reálnych koreňov: 1
+Intervaly (ľavá hodnota reprezentuje doľnú hranicu intervalu, pravá hodnota reprezetnuje hornú hranicu intervalu):
+1. koreň: [-3.000000, 3.000000]
+
+
+----------------------------------------------------
+                  Metóda bisekcie                   
+----------------------------------------------------
+
+Rovnica: 2 * x^3 + 5 * x^2 + 4 * x + 5
+
+
+1. Interval: [-3, 3]
+
+Koreň: -2.12109
+Funkčná hodnota pre koreň: -0.0749472
+Epsilon (presnosť): 0.01
+Počet krokov: 9
+Interval, v ktorom bol najdený koreň: [-2.12109, -2.10938]
+Velkosť intervalu: 0.0117188
+Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = 0.005859375
+
+Čas bisekcie: 0.008637 sekúnd
+
+
+
+----------------------------------------------------
+                Newtonova metóda                     
+----------------------------------------------------
+
+Rovnica: 2 * x^3 + 5 * x^2 + 4 * x + 5
+
+
+1. Interval: [-3, 3]
+
+Interval nesplňal Furierove podmienky, pokračoval som s ďalším koreňom, ak existovala 
+
+Čas newtonovej metódy: 0.004987 sekúnd
+<------------------------------------------>
+
