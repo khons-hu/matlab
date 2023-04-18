@@ -1,0 +1,52 @@
+
+##########################################################
+###     Vstupný súbor DataParametre.txt 1. riadok      ###
+##########################################################
+
+------------------------------------------------------------
+        Výpočet integrálu pomocou Simpsonovej metódy
+------------------------------------------------------------
+Integral vyzerá nasledovne: I = 0 - 1 ∫ (1*x^2 + -2*x + 3) / (2*x + 1)*(3*x + 2) dx
+
+Najväčšia hodnota štvrtej derivácie na danom intervale je: 2393.250000
+Počet subintervalov je: 12
+Vzdialenosť uzlových bodov je: 0.083333
+
+Výpočet súčtov pre párne a nepárne čísla:
+---------------------------------------------
+Nepárne číslo: f(x_1) = f(0.08333) = 1.08201
+Párne číslo: f(x_2) = f(0.16667) = 0.80833
+Nepárne číslo: f(x_3) = f(0.25000) = 0.62121
+Párne číslo: f(x_4) = f(0.33333) = 0.48889
+Nepárne číslo: f(x_5) = f(0.41667) = 0.39277
+Párne číslo: f(x_6) = f(0.50000) = 0.32143
+Nepárne číslo: f(x_7) = f(0.58333) = 0.26752
+Párne číslo: f(x_8) = f(0.66667) = 0.22619
+Nepárne číslo: f(x_9) = f(0.75000) = 0.19412
+Párne číslo: f(x_10) = f(0.83333) = 0.16898
+Nepárne číslo: f(x_11) = f(1.00000) = 0.13333
+
+Súčet párnych hodnôt: 2.69097
+Súčet nepárnych hodnôt: 2.01382
+---------------------------------------------
+
+Výpočet vzorca Simpsonovej metódy:
+-------------------------------------------------
+f(a) = f(0.00000) = 1.50000
+f(b) = f(1.00000) = 0.13333
+4 * Súčet nepárnych hodnôt = 4 * 2.69097 = 10.76388
+2 * Súčet párnych hodnôt = 2 * 2.01382 = 4.02765
+-------------------------------------------------
+Výsledná hodnota určitého integrálu je: (h/3) * [f(a) + f(b) + 4 * Súčet nepárnych hodnôt + 2 * Súčet párnych hodnôt] = 
+(0.08333/3) * [1.50000 + 0.13333 + 4 * 2.69097 + 2 * 2.01382] = 0.456246
+
+##########################################################
+###     Vstupný súbor DataParametre.txt 2. riadok      ###
+##########################################################
+
+------------------------------------------------------------
+        Výpočet integrálu pomocou Simpsonovej metódy
+------------------------------------------------------------
+Integral vyzerá nasledovne: I = -10 - 20 ∫ (5*x^2 + 2*x + 1) / (2*x + 1)*(3*x + 2) dx
+
+Nastala chyba pri výpočte štvrtej derivácie, takže sa nedá vypočítať integral pomocou Simpsonovej metódy.

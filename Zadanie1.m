@@ -10,35 +10,49 @@ clear;
 format long;
 
 % ----------------------------------------------------------------------------------------------------------------------------
-% Načítavanie DataParametre.txt do matice 
+% Načítavanie DataParametre.txt do matice
 DataParametersInputFile = 'InputFiles/DataParametre.txt';
-% Použitím funkcie readmatrix()
-DataParametersInputMatrix = readmatrix(DataParametersInputFile);
 
-% Výpis o vstupu
-disp('Váš vstupný súbor so vstupnými parametrami pre vašu rovnicu a pre určitý integrál vyzerá nasledovne: ');
-disp(DataParametersInputMatrix);
+if isfile(DataParametersInputFile)
+    % Použitím funkcie readmatrix()
+    DataParametersInputMatrix = readmatrix(DataParametersInputFile);
 
-disp('Kde štruktúra jeho riadkov je: info, a, b, c, d, k, q, r, s, LB, UB, ε');
-disp('Pre úlohy s rovnicou a s aproximáciami budú používané riadky, prektoré je hodnota info rovná 1,' );
-disp(['pre úlohu na výpočet určitého integrálu budú používané, pre ktoré je hodnota info rovná 2', newline]);
+    % Výpis o vstupu
+    disp('Váš vstupný súbor so vstupnými parametrami pre vašu rovnicu a pre určitý integrál vyzerá nasledovne: ');
+    disp(DataParametersInputMatrix);
+
+    disp('Kde štruktúra jeho riadkov je: info, a, b, c, d, k, p, q, r, s, LB, UB, ε (teda má 13 stĺpcov).');
+    disp('Pre úlohy s rovnicou a s aproximáciami budú používané riadky, prektoré je hodnota info rovná 1,' );
+    disp(['pre úlohu na výpočet určitého integrálu budú používané, pre ktoré je hodnota info rovná 2', newline]);
+else
+    disp('Váš vstupný súbor so vstupnými parametrami pre vašu rovnicu a pre určitý integrál neexistuje.');
+    disp('Vytvorte si súbor DataParametre.txt v priečinku InputFiles a spustite program znovu.');
+    return;
+end
 % ----------------------------------------------------------------------------------------------------------------------------
 
 % ----------------------------------------------------------------------------------------------------------------------------
 % Načítavanie DataAproximacie.txt do matice 
 DataAproximationsInputFile = 'InputFiles/DataAproximacie.txt';
-% Použitím funkcie readmatrix()
-DataAproximationsInputMatrix = readmatrix(DataAproximationsInputFile);
+if isfile(DataAproximationsInputFile)
+    % Použitím funkcie readmatrix()
+    DataAproximationsInputMatrix = readmatrix(DataAproximationsInputFile);
 
-% Výpis o vstupu
-disp('Váš vstupný súbor so vstupnými parametrami pre metódu najmenších štvorcov polynómom prvého a druhého stupňa funkcie');
-disp(', aj pre aproximáciu s Langrangeovým interpolačným polynómom.');
-disp(DataAproximationsInputMatrix);
+    % Výpis o vstupu
+    disp('Váš vstupný súbor so vstupnými parametrami pre metódu najmenších štvorcov polynómom prvého a druhého stupňa funkcie');
+    disp(', aj pre aproximáciu s Langrangeovým interpolačným polynómom.');
+    disp(DataAproximationsInputMatrix);
 
-disp('Kde štruktúra jeho riadkov je: hodnoty funkcií sú zadané vždy vo dvoch stĺpcoch (argument xi a funkčná hodnota f(xi)).')
-disp('Tzn. ak napr. súbor obsahuje 6 stĺpcov, tak reprezentuje 3 rôzne funkcie. Každá dvojica stĺpcov reprezentujúca jednu funkciu musí mať rovnaký rozmer');
-disp('Pre úlohy s rovnicou a s aproximáciami budú používané riadky, prektoré je hodnota info rovná 1,' );
-disp(['pre úlohu na výpočet určitého integrálu budú používané, pre ktoré je hodnota info rovná 2', newline]);
+    disp('Kde štruktúra jeho riadkov je: hodnoty funkcií sú zadané vždy vo dvoch stĺpcoch (argument xi a funkčná hodnota f(xi)).')
+    disp('Tzn. ak napr. súbor obsahuje 6 stĺpcov, tak reprezentuje 3 rôzne funkcie. Každá dvojica stĺpcov reprezentujúca jednu funkciu musí mať rovnaký rozmer');
+    disp('Pre úlohy s rovnicou a s aproximáciami budú používané riadky, prektoré je hodnota info rovná 1,' );
+    disp(['pre úlohu na výpočet určitého integrálu budú používané, pre ktoré je hodnota info rovná 2', newline]);
+else
+    disp('Váš vstupný súbor so vstupnými parametrami pre metódu najmenších štvorcov');
+    disp('a pre aproximáciu s Langrangeovým interpolačným polynómom neexistuje.');
+    disp('Vytvorte si súbor DataAproximacie.txt v priečinku InputFiles a spustite program znovu.');
+    return;
+end
 % ----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -67,32 +81,34 @@ if (checkValidityOfInputMatrix(DataParametersInputMatrix))
         
         % V prípade, že info nie je ani 1 ani 2, tak vypíšeme chybovú hlášku a preskočíme tento riadok
         if (info ~= 1 && info ~= 2)
-            disp(['Nesprávne údaje v riadku ', num2str(iterator), ' v stĺpci info.']);
-            disp(['Prvok v stĺpci info musí byť buď 1 alebo 2.']);
-            disp(['Pokračujem s ďalším riadkom.', newline]);
-            continue;
+            % Používateľ si môže zvoliť, či chce pokračovať s ďalším riadkom alebo nie
+            userChoiceOutput = userChoiceOnInvalidInfo(iterator);
+
+            % ak chce zvoliť medzi rovnicou alebo integrálom
+            if userChoiceOutput == true 
+                EquationOrIntegral = userChoiceOnEquationOrIntegral();
+
+                % ak chce rovnicu
+                if EquationOrIntegral == true
+                    % nastavíme info na 1
+                    info = 1;
+                % inak integrál
+                else
+                    % nastavíme info na 2
+                    info = 2;
+                end
+            else
+                % v inom prípade pokračujeme s ďalším riadkom, ak existuje
+                disp(['Pokračujem s ďalším riadkom.', newline']);
+                continue;
+            end
         end
 
         % switch aby na rozhodnutie či máme info 1 alebo 2 v danom riadku
         switch info
             % V prípade ak info je 1, praćujeme s našou rovnicou
             case 1
-                % V prípade, že jeden z parametrov a, b, c, d, epsilon je NaN (Not a Number), tak vypíšeme chybovú hlášku a preskočíme tento riadok
-                if isnan(DataParametersInputMatrix(iterator, 2)) || isnan(DataParametersInputMatrix(iterator, 3)) || isnan(DataParametersInputMatrix(iterator, 4)) || isnan(DataParametersInputMatrix(iterator, 5)) || isnan(DataParametersInputMatrix(iterator, 12))
-                    disp(['Nesprávne údaje v riadku ', num2str(iterator), ' v stĺpcoch a, b, c, d, epsilon.']);
-                    disp(['Pokračujem s ďalším riadkom.', newline]);
-                    continue;
-                end
-
-                % V prípade, že parameter a je nulový, alebo dve z parametrov b, c, d sú nulové, alebo epsilon je záporný, tak vypíšeme chybovú hlášku a preskočíme tento riadok
-                if DataParametersInputMatrix(iterator, 2) == 0 || (DataParametersInputMatrix(iterator, 3) == 0 && DataParametersInputMatrix(iterator, 4) == 0) || (DataParametersInputMatrix(iterator, 3) == 0 && DataParametersInputMatrix(iterator, 5) == 0) || (DataParametersInputMatrix(iterator, 4) == 0 && DataParametersInputMatrix(iterator, 5) == 0) || DataParametersInputMatrix(iterator, 12) < 0
-                    disp(['Nesprávne údaje v riadku ', num2str(iterator), ' v stĺpcoch a, b, c, d.']);
-                    disp(['Prvok a musí byť nenulový.']);
-                    disp(['Z prvkov b, c, d aspoň dva musia byť nenulové.']);
-                    disp(['Epsilon nesmie byť záporný.']);
-                    disp(['Pokračujem s ďalším riadkom.', newline]);
-                    continue;
-                end
+                disp(['Keďže hodnota info je rovná 1, tak budeme pracovať s rovnicou.', newline]);
 
                 % ----------------------------------------------------------------------------------------------------------------------------
                 % úloha (a):
@@ -104,8 +120,36 @@ if (checkValidityOfInputMatrix(DataParametersInputMatrix))
 
                 % Získame parametre a, b, c, d s našimi pomocnými funkciami
                 disp(['Vstupná matica - ', num2str(iterator), '. riadok: ']);
-                parameterA = getParameterA(iterator, DataParametersInputMatrix);
-                [parameterB, parameterC, parameterD] = getParametersBCD(iterator, DataParametersInputMatrix);
+                
+                if ~isnan(DataParametersInputMatrix(iterator, 2)) && (DataParametersInputMatrix(iterator, 2)) ~= 0 && isreal((DataParametersInputMatrix(iterator, 2)))
+                    parameterA = getParameterA(iterator, DataParametersInputMatrix);
+                else
+                    disp(['V stlpci ', num2str(iterator), ' sa nachádza neplatný vstup pre parameter a, pretože je nulový alebo neplatný.']);
+                    userChoice = input('Chcete pokračovať s ďalším riadkom? alebo chcete zadať vstup pre parameter a? (y/n), v prípade, že chcete zadať vstup pre parameter a, zadajte y, ak nie, zadajte n: ', 's');
+
+                    if strcmpi(userChoice, 'y')
+                        parameterA = getParameterAFromUser();
+                    else
+                        disp(['Pokračujem s ďalším riadkom.', newline]);
+                        continue;
+                    end
+                end
+
+                % V prípade, že parametre b, c, d nie sú platné
+                if (((DataParametersInputMatrix(iterator, 3)) ~= 0 && (DataParametersInputMatrix(iterator, 4)) ~= 0) || ((DataParametersInputMatrix(iterator, 3)) ~= 0 && (DataParametersInputMatrix(iterator, 5)) ~= 0) || ((DataParametersInputMatrix(iterator, 4)) ~= 0 && (DataParametersInputMatrix(iterator, 5)) ~= 0)) && ~isnan(DataParametersInputMatrix(iterator, 3)) && ~isnan(DataParametersInputMatrix(iterator, 4))  && ~isnan(DataParametersInputMatrix(iterator, 5)) && isreal((DataParametersInputMatrix(iterator, 3))) && isreal((DataParametersInputMatrix(iterator, 4))) && isreal((DataParametersInputMatrix(iterator, 5)))
+                    [parameterB, parameterC, parameterD] = getParametersBCD(iterator, DataParametersInputMatrix);
+                else
+                    disp(['V stĺpcoch ', num2str(iterator), ' sa nachádzajú neplatné vstupy pre parametre b, c, d, pretože aspoň dva z nich sú nulové alebo neplatné.']);
+                    userChoice = input('Chcete pokračovať s ďalším riadkom? alebo chcete zadať vstupy pre parametre b, c, d? (y/n), v prípade, že chcete zadať vstupy pre parametre b, c, d, zadajte y, ak nie, zadajte n: ', 's');
+
+                    if strcmpi(userChoice, 'y')
+                        [parameterB, parameterC, parameterD] = getParametersBCDFromUser();
+                    else
+                        disp(['Pokračujem s ďalším riadkom.', newline]);
+                        continue;
+                    end
+                end
+
                 % Zadefinujeme našu rovnicu a * x^3 + b * x^2 + c * x + d = 0 vo forme
                 % anonymnej funkcie s jedným parametrom x a s našimi zadanými reálnymi parametrami
                 f = @(x) (parameterA * x.^3 + parameterB * x.^2 + parameterC * x + parameterD);
@@ -153,7 +197,7 @@ if (checkValidityOfInputMatrix(DataParametersInputMatrix))
                 % Zapíšeme relevantné informácie do súboru Rovnica.txt
                 fprintf(EquationTxt, "\n");
                 fprintf(EquationTxt, "##########################################################\n");
-                fprintf(EquationTxt, "###     Vstupný súbor Dataparametre.txt %d. riadok     ###\n", iterator);
+                fprintf(EquationTxt, "###     Vstupný súbor Dataparametre.txt %d. riadok      ###\n", iterator);
                 fprintf(EquationTxt, "##########################################################\n");
                 fprintf(EquationTxt, "\n");
                 fclose(EquationTxt);
@@ -179,7 +223,24 @@ if (checkValidityOfInputMatrix(DataParametersInputMatrix))
                 % premennej s menom epsilon
 
                 disp(['Metóda bisekcie:', newline]);
-                epsilon = getEpsilon(iterator, DataParametersInputMatrix);
+
+                % V prípade ak epsilon je neplatná hodnota v súbore DataParametre.txt
+                % tak sa používateľovi zobrazí hláška, že epsilon je neplatná hodnota
+                % a opýtame sa ho, či chce epsilon zadať vy alebo či chce pokračovať ďalej
+                epsilon = -1;
+                if ~isnan(DataParametersInputMatrix(iterator, 13)) && isreal(DataParametersInputMatrix(iterator, 13)) && DataParametersInputMatrix(iterator, 13) >= 0
+                    epsilon = getEpsilon(iterator, DataParametersInputMatrix);
+                else
+                    disp(['V stlpci Epsilon v súbore Dataparametre.txt na riadku ', num2str(iterator), ' nie je zadaná hodnota epsilon alebo je zadaná zlá hodnota epsilon.']);
+
+                    userChoice = input('Chcete epsilon zadať vy alebo chcete pokračovať s ďalším riadkom? (y/n), ak zadáte y, tak máte možnosť epsilon zadať, ak zadáte n, tak pokračujete ďalej: ', 's');
+                    if strcmpi(userChoice, 'y')
+                        epsilon = getEpsilonFromUser();
+                    else
+                        disp(['Pokračujem s ďalším riadkom.', newline]);
+                        continue;
+                    end
+                end
 
                 % Riešime aproximáciu metódou bisekcie
 
@@ -189,6 +250,8 @@ if (checkValidityOfInputMatrix(DataParametersInputMatrix))
                 % krok, lava hranica, prava hranica, stred medzi nimi,
                 % koreň, následne zapíšeme informácie do súboru Rovnica.txt
                 [bisectionOutputMatrix, timeOfBisection, errorEstimateBisectionMatrix, bisectionRootsVector] = performBisectionAndSaveInformationsToFile(f, intervals, epsilon, parameterA, parameterB, parameterC, parameterD);
+
+                % Riešime aproximáciu metódou newtonovej metódy
 
                 % spravíme aproximáciu pomocou newtonovej metody uložíme
                 % vysledky do matici, vrátime aj celkový čas newtonove metódy pre
@@ -206,16 +269,19 @@ if (checkValidityOfInputMatrix(DataParametersInputMatrix))
 
             % V prípade ak info je 2, pracujeme s našim integrálom
             case 2
-                % V prípade, že jeden z parametrov a, b, c, k, q, r, s, LB, UB, epsilon je NaN (Not a Number), tak vypíšeme chybovú hlášku a preskočíme tento riadok
-                if isnan(DataParametersInputMatrix(iterator, 2)) || isnan(DataParametersInputMatrix(iterator, 3)) || isnan(DataParametersInputMatrix(iterator, 4)) || isnan(DataParametersInputMatrix(iterator, 6)) || isnan(DataParametersInputMatrix(iterator, 7)) || isnan(DataParametersInputMatrix(iterator, 8)) || isnan(DataParametersInputMatrix(iterator, 9)) || isnan(DataParametersInputMatrix(iterator, 10)) || isnan(DataParametersInputMatrix(iterator, 11)) || isnan(DataParametersInputMatrix(iterator, 12))
-                    disp(['Nesprávne údaje v riadku ', num2str(iterator), ' v stĺpcoch a, b, c, d, epsilon.']);
-                    disp(['Pokračujem s ďalším riadkom.', newline]);
+                disp(['Keďže info je 2, pracujeme s našim integrálom.', newline]);
+
+                % V prípade, že jeden z parametrov a, b, c, k, p, q, r, s, LB, UB, epsilon je NaN (Not a Number), alebo dolná hranica je vacsia ako horná, alebo menovatel je 0, alebo epsilon je záporné tak vypíšeme chybovú hlášku a preskočíme tento riadok
+                if isnan(DataParametersInputMatrix(iterator, 2)) || isnan(DataParametersInputMatrix(iterator, 3)) || isnan(DataParametersInputMatrix(iterator, 4)) || isnan(DataParametersInputMatrix(iterator, 6)) || isnan(DataParametersInputMatrix(iterator, 8)) || isnan(DataParametersInputMatrix(iterator, 9)) || isnan(DataParametersInputMatrix(iterator, 10)) || isnan(DataParametersInputMatrix(iterator, 11)) || isnan(DataParametersInputMatrix(iterator, 12)) || isnan(DataParametersInputMatrix(iterator, 13)) || DataParametersInputMatrix(iterator, 13) < 0 || (DataParametersInputMatrix(iterator, 11) > DataParametersInputMatrix(iterator, 12)) || (DataParametersInputMatrix(iterator, 6) == 0 && DataParametersInputMatrix(iterator, 9) == 0)
+                    disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je zadaná hodnota niektorého z parametrov a, b, c, k, q, r, s, LB, UB, epsilon alebo je zadaná zlá hodnota niektorého z parametrov.']);
                     continue;
                 end
 
                 % úloha (f):
                 % Vypočítajte určitý integrál
                 % I = LB-UB∫ (ax^2 + bx + c) / (kx + q)*(rx + s) dx
+
+                disp(['úloha (f):', newline]);
 
                 % Parametre integrálu
 
@@ -237,39 +303,45 @@ if (checkValidityOfInputMatrix(DataParametersInputMatrix))
                 
                 % premenné parameterQ, do ktorej uložíme hodnotu z
                 % DataParametersInputMatrix v stĺpci 5
-                parameterQ = DataParametersInputMatrix(iterator, 7);
+                parameterQ = DataParametersInputMatrix(iterator, 8);
 
                 % premenné parameterR, do ktorej uložíme hodnotu z
                 % DataParametersInputMatrix v stĺpci 5
-                parameterR = DataParametersInputMatrix(iterator, 8);
+                parameterR = DataParametersInputMatrix(iterator, 9);
 
                 % premenné parameterS, do ktorej uložíme hodnotu z
                 % DataParametersInputMatrix v stĺpci 5
-                parameterS = DataParametersInputMatrix(iterator, 9);
+                parameterS = DataParametersInputMatrix(iterator, 10);
 
                 % dolná a horná hranica integrácie
 
                 % premenné lowerBound, do ktorej uložíme hodnotu z
                 % DataParametersInputMatrix v stĺpci 5
-                lowerBound = DataParametersInputMatrix(iterator, 10);
+                lowerBound = DataParametersInputMatrix(iterator, 11);
 
                 % premenné upperBound, do ktorej uložíme hodnotu z
                 % DataParametersInputMatrix v stĺpci 5
-                upperBound = DataParametersInputMatrix(iterator, 11);
+                upperBound = DataParametersInputMatrix(iterator, 12);
 
                 % presnosť integrácie pre simpsonovu metódu
 
                 % premenné epsilon, do ktorej uložíme hodnotu z
                 % DataParametersInputMatrix v stĺpci 5
-                epsilon = DataParametersInputMatrix(iterator, 12);
+                epsilon = DataParametersInputMatrix(iterator, 13);
                 
                 f = @(x) (parameterA * x.^2 + parameterB * x + parameterC) ./ ((parameterK * x + parameterQ) .* (parameterR * x + parameterS));
 
                 % Vypíšeme informácie o integráli používateľovi
                 displayIntegral(parameterA, parameterB, parameterC, parameterK, parameterQ, parameterR, parameterS, lowerBound, upperBound, epsilon);
 
+                % vypočítame hodnotu určitého integrálu pomocou simpsonovej metódy
+                % a uložíme ju do premennej integralValue, takisto uložíme
+                % všetky kroky a výsledky do súboru
+                integralValue = performSimpsonMethodAndSaveEveryStepAndResultIntoFile(f, lowerBound, upperBound, epsilon, iterator, parameterA, parameterB, parameterC, parameterK, parameterQ, parameterR, parameterS);
         end
     end
+else
+    disp('Súbor DataParametre.txt nie je platný, neobsahuje 13 stlpcov alebo nebol nájdený. Skontrolujte, či je súbor v adresári InputFiles a že či obsahuje práve 13 stlpcov.');
 end
 
 
@@ -294,15 +366,38 @@ function isInputMatrixValid = checkValidityOfInputMatrix(DataParametersInputMatr
     % Prednastavenie hodnoty isInputMatrixValid na true
     isInputMatrixValid = true;
     
-    % Kontrolujeme, či vstupný súbor nie je prázdny alebo či neobsahuje 12
+    % Kontrolujeme, či vstupný súbor nie je prázdny alebo či neobsahuje 13
     % stlpcov
-    if size(DataParametersInputMatrix, 2) ~= 12 || isempty(DataParametersInputMatrix)
+    if size(DataParametersInputMatrix, 2) ~= 13 || isempty(DataParametersInputMatrix)
         % V prípade, keď jeden z tých platí, informujeme používateľa o tom a
         % pokračujeme s programom ďalej
-        disp('Vstupný súbor neobsahuje správny počet stĺpcov (12) alebo je prázdny.');
+        disp('Vstupný súbor neobsahuje správny počet stĺpcov (13) alebo je prázdny.');
         disp('Pokračujem s ďalšou úlohou...');
         isInputMatrixValid = false;
     end
+end
+
+% Pomocná funkcia na kontrolu, či DataAproximacie.txt je platný
+%
+% parameter DataAproximationsInputMatrix : matica - vstupná matica
+%
+% výstup: boolean (true alebo false)
+function isDataAproximationsInputMatrixValid = checkValidityOfDataAproximationsInputMatrix(DataAproximationsInputMatrix)
+    % Overíme, či má vstupná matica párny počet stĺpcov
+    numberOfColumns = size(DataAproximationsInputMatrix, 2);
+
+    % Ak má vstupná matica nepárny počet stĺpcov, vypíšeme chybovú hlášku a
+    if mod(numberOfColumns, 2) ~= 0
+        % nastavíme premennú isDataAproximationsInputMatrixValid na false
+        isDataAproximationsInputMatrixValid = false;
+        % a vypíšeme chybovú hlášku
+        disp('Chyba: Vstupná matica DataAproximationsInputMatrix musí mať párny počet stĺpcov.');
+        % a vrátime sa z funkcie
+        return;
+    end
+
+    % Ak má vstupná matica párny počet stĺpcov, tak nastavíme premennú na true
+    isDataAproximationsInputMatrixValid = true;
 end
 
 % funkcia getParameterA, kde používateľ sa môže rozhodnúť, či chce zadať
@@ -318,7 +413,7 @@ function parameterA = getParameterA(iterator, DataParametersInputMatrix)
 
     % opýtame sa používateľa, že či chce zadať parameter a on alebo načítať
     % to zo súboru
-    userChoice = input('Chcete zadať vstup pre parameter a vy? (Zadajte z možností a, y, ano, yes ak ano - hocičo iné ak nechcete):', 's');
+    userChoice = input('Chcete zadať vstup pre parameter a vy alebo načítať to zo vstupného súboru? (Zadajte z možností a, y, ano, yes ak ano - hocičo iné ak nechcete):', 's');
     disp(newline);
 
     % V prípade, keď používateľ chce zadat parameter ako vstup
@@ -355,6 +450,37 @@ function parameterA = getParameterA(iterator, DataParametersInputMatrix)
         disp(['Parameter a pre ', num2str(iterator), '. riadok je: ', num2str(parameterA)]);
     end
 end
+
+% funkcia getParameterAFromUser, kde používateľ má zadať parameter a ako vstup
+%
+% výstup: parameterA : double
+function parameterA = getParameterAFromUser()
+    % Premenná 'parameterA' ktorá bude reprezentovať parameter a v rovnici
+    parameterA = 0;
+
+    % Pomocná premenná 'helpParameterA' vo forme reťazca čo nám umožnuje načítavaný
+    helpParameterA = '';
+
+    % vstup kontrolovať či je to reálne číslo a či to neni neplatný vstup (napríklad písmeno, špeciálny karakter, prázdny reťazec)
+
+    while (parameterA == 0 || ~checkRealNumber(helpParameterA))
+        % Opýtame sa na vstup od používateľa
+        helpParameterA = input('Zadajte hodnotu parametra a (nenulové reálne číslo): ', 's');
+        % V prípade, keď to je reálne číslo
+        if (checkRealNumber(helpParameterA))
+            % Prekonvertujeme to číslo na double (desatinné číslo)
+            parameterA = str2double(helpParameterA);
+        else
+            % V inom prípade informujeme používateľa o tom, že zadal neplatný
+            % vstup
+            disp('Zadali ste neplatný vstup!');
+        end
+    end
+
+    % Vypíšeme parameter 'a' aby používateľ bol istý že to bolo uložené správne
+    disp(['Váš zvolený parameter a je: ', num2str(parameterA)]);
+end
+
 
 % funkcia getParameterBCD, kde používateľ sa môže rozhodnúť, či chce zadať
 % parametre b, c, d ako vstup alebo chce to načítať z konkrétneho riadku
@@ -430,6 +556,50 @@ function [parameterB, parameterC, parameterD] = getParametersBCD(iterator, DataP
         disp(['Parameter c pre ', num2str(iterator), '. riadok je: ', num2str(parameterC)]);
         disp(['Parameter d pre ', num2str(iterator), '. riadok je: ', num2str(parameterD), newline]);
     end
+end
+
+function [parameterB, parameterC, parameterD] = getParametersBCDFromUser()
+    parameterB = 0;
+    parameterC = 0;
+    parameterD = 0;
+
+    % Pomocné premenné 'helpParameterB', 'helpParameterC', 'helpParameterD' vo forme reťazca čo nám umožnuje načítavaný
+    % vstup kontrolovať či je to reálne číslo a či to neni neplatný vstup (napríklad písmeno, špeciálny karakter, prázdny reťazec)
+    helpParameterB = '';
+    helpParameterC = '';
+    helpParameterD = '';
+
+    % Pokiaľ dve parametre sú nulové alebo niektorí z parametrov nie sú reálne
+    % čísla
+    while (parameterB == 0 && parameterC == 0) || (parameterB == 0 && parameterD == 0) || (parameterC == 0 && parameterD == 0 || ~checkRealNumber(helpParameterB) || ~checkRealNumber(helpParameterC) || ~checkRealNumber(helpParameterD))
+        % Pýtame sa vstupy od používateľa na všetky tri(3) parametre zaradom
+        helpParameterB = input('Zadajte hodnotu parametra b (reálne číslo): ', 's');
+        helpParameterC = input('Zadajte hodnotu parametra c (reálne číslo): ', 's');
+        helpParameterD = input('Zadajte hodnotu parametra d (reálne číslo): ', 's');
+    
+        % Ak všetké vstupy sú reálne čísla, prekonvertujeme ich na double (desatinné číslo)
+        if (checkRealNumber(helpParameterB) && checkRealNumber(helpParameterC) && checkRealNumber(helpParameterD))
+            parameterB = str2double(helpParameterB);
+            parameterC = str2double(helpParameterC);
+            parameterD = str2double(helpParameterD);
+            
+            % V prípade, ak aspoň dve čísla z troch sú nulové, informujeme o
+            % tom používateľa
+            if (parameterB == 0 && parameterC == 0) || (parameterB == 0 && parameterD == 0) || (parameterC == 0 && parameterD == 0)
+                disp('Aspoň dva z parametrov b, c, d musia byť nenulové! Skúste znovu!');
+            end
+        else
+            % Ak tie vstupy nie sú reálne čísla, poprosíme používateľa aby
+            % zadal reálne čísla
+            disp('Prosím, zadajte reálne čísla!');
+        end
+    end
+
+    % Vypíšeme parametre 'b', 'c', 'd' aby používateľ bol istý že boli uložené
+    % správne
+    disp(['Váš zvolený parameter b je: ', num2str(parameterB)]);
+    disp(['Váš zvolený parameter c je: ', num2str(parameterC)]);
+    disp(['Váš zvolený parameter d je: ', num2str(parameterD), newline]);
 end
 
 
@@ -874,11 +1044,44 @@ function epsilon = getEpsilon(iterator, DataParametersInputMatrix)
     else
         % uložíme i-ty riadok 12. stlpec (kde má byť hodnota epsilonu) zo
         % vstupného súboru
-        epsilon = DataParametersInputMatrix(iterator, 12);
+        epsilon = DataParametersInputMatrix(iterator, 13);
         % Vypíšeme epsilon aby používateľ bol istý že boli uložené
         % správne
         disp(['Epsilon pre ', num2str(iterator), '. riadok je: ', num2str(epsilon)]);
     end
+end
+
+function epsilon = getEpsilonFromUser()
+    % pomocná premenná pre epsilon ako retazec, vstup od pouzivatela
+    epsilonHelp = '';
+    % premenná pre epsilon, ktorú budeme vrátiť
+    epsilon = -1;
+
+    % pokial epsilon je zaporny alebo epsilonHelp nie je realne cislo
+    while (~checkRealNumber(epsilonHelp) || epsilon < 0)
+        % Opytame sa na epsilon od používateľa
+        epsilonHelp = input('Zadajte epsilon (presnosť, kladné číslo): ', 's');
+        
+        % Ak pomocná premenná je reálne číslo
+        if (checkRealNumber(epsilonHelp))
+            % prekonvertujeme pomocnú premennú na double a uložíme ho
+            % do premennej epsilon
+            epsilon = str2double(epsilonHelp);
+            % Ak epsilon je záporný, informujeme používateľa o tom, že
+            % zadal neplatný vstup
+            if (epsilon < 0)
+                disp('Zadali ste záporne epsilon! Skúste znova!');
+            end
+        else
+            % ak pomocná premenná nie je reálne číslo, informujeme o
+            % tom používateľa
+            disp('Zadali ste neplatné epsilon! Skúste znova!');
+        end
+    end
+
+    % Vypíšeme epsilon aby používateľ bol istý že boli uložené
+    % správne
+    disp(['Váš zvolený epsilon je: ', num2str(epsilon)]);
 end
 
 % funkcia performBisectionAndSaveInformationsToFile spraví bisekciu s danou funkciou, s daným
@@ -1231,7 +1434,11 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         m1 = min(abs(f1(m)), abs(f1(M)));
 
         % Vypočítame odhad absolútnej chyby pre Newtonovu metódu
-        errorEstimate = abs(newtonOutputMatrix(end, 4)) / m1;
+        if m1 == 0 || isnan(m1) || isinf(m1) || isempty(newtonOutputMatrix) || isnan(newtonOutputMatrix(end, 4))
+            errorEstimate = NaN;
+        else
+            errorEstimate = abs(newtonOutputMatrix(end, 4)) / m1;
+        end
 
         errorEstimateMatrix = [errorEstimateMatrix, errorEstimate];
 
@@ -1475,6 +1682,253 @@ function displayIntegral(parameterA, parameterB, parameterC, parameterK, paramet
     disp(['Parameter epsilon zo vstupného súboru je: ', num2str(epsilon), newline]);
 
     disp(['Integrál, ktorý budeme počítať je I = ', num2str(lowerBound), '-', num2str(upperBound), '∫ (', num2str(parameterA), 'x^2 + ', num2str(parameterB), 'x + ', num2str(parameterC), ') / (', num2str(parameterK), 'x + ', num2str(parameterQ), ')*(', num2str(parameterR), 'x + ', num2str(parameterS), ') dx', newline]);
+    disp(['Budeme to počítať pomocou Simpsonovej metódy.',newline]);
+end
+
+
+% funkcia userChoiceOnInvalidInfo, ktorá sa zavolá, ak sa v stĺpci info vyskytne nesprávny údaj
+% a užívateľ bude mať možnosť medzi vybrať medzi rovnicou a určitým integrálom alebo preskočiť na ďalší riadok, ak existuje
+function userChoiceOutput = userChoiceOnInvalidInfo(iterator)
+    % vytvoríme si premennú, ktorá bude určovať, či užívateľ chce vybrať medzi rovnicou a určitým integrálom alebo preskočiť na ďalší riadok, ak existuje
+    userChoice = input(['Nesprávne údaje v riadku ', num2str(iterator), ' v stĺpci info. ', newline, 'Chcete vybrať medzi rovnicou a určitým integrálom? (y/n), (ak nechcete, tak preskočíme na ďalší riadok, ak existuje): '], 's');
+    % inicializujeme premennú userChoiceOutput, ktorá bude určovať, či užívateľ chce vybrať medzi rovnicou a určitým integrálom alebo preskočiť na ďalší riadok, ak existuje
+    userChoiceOutput = false;
+
+    % ak užívateľ zadal y, tak nastavíme premennú userChoiceOutput na true a vrátime ju
+    if strcmpi(userChoice, 'y')
+        userChoiceOutput = true;
+        return;
+    % ak užívateľ zadal n, tak nastavíme premennú userChoiceOutput na false a vrátime ju
+    elseif strcmpi(userChoice, 'n')
+        return;
+        userChoiceOutput = false;
+    end
+
+    % zavoláme si funkciu, ktorá bude kontrolovať, či užívateľ zadal správne údaje
+    while ~strcmpi(userChoice, 'y') && ~strcmpi(userChoice, 'n')
+
+        % vypíšeme do konzoly, že užívateľ zadal nesprávne údaje a bude mať možnosť znova zadať údaje
+        disp('Nesprávne údaje, skúste znova.');
+        userChoice = input(['Nesprávne údaje v riadku ', num2str(iterator), ' v stĺpci info. ', newline, 'Chcete vybrať medzi rovnicou a určitým integrálom? (y/n), (ak nechcete, tak preskočíme na ďalší riadok, ak existuje): '], 's');
+
+        % ak užívateľ zadal y, tak nastavíme premennú userChoiceOutput na true a vrátime ju
+        if strcmpi(userChoice, 'y')
+            userChoiceOutput = true;
+            return;
+        % ak užívateľ zadal n, tak nastavíme premennú userChoiceOutput na false a vrátime ju
+        elseif strcmpi(userChoice, 'n')
+            userChoiceOutput = false;
+            return;
+        end
+    end
+end
+
+% funkcia userChoiceOnEquationOrIntegral, ktorá sa zavolá, ak sa v stĺpci info vyskytne nesprávny údaj
+% a užívateľ bude mať možnosť medzi vybrať medzi rovnicou a určitým integrálom
+function EquationOrIntegral = userChoiceOnEquationOrIntegral()
+    % vytvoríme si premennú, ktorá bude určovať, či užívateľ chce vybrať medzi rovnicou a určitým integrálom
+    userChoice = input(['Vyberte si medzi rovnicou a určitým integrálom. ', newline, 'Rovnica = 1, Určitý integrál = 2: '], 's');
+
+    % inicializujeme premennú EquationOrIntegral, ktorá bude určovať, či užívateľ chce vybrať medzi rovnicou a určitým integrálom
+    EquationOrIntegral = false;
+
+    % ak užívateľ zadal 1, tak nastavíme premennú EquationOrIntegral na true a vrátime ju
+    if strcmpi(userChoice, '1')
+        % nastavíme premennú EquationOrIntegral na true
+        EquationOrIntegral = true;
+        return;
+    % ak užívateľ zadal 2, tak nastavíme premennú EquationOrIntegral na false a vrátime ju
+    elseif strcmpi(userChoice, '2')
+        % nastavíme premennú EquationOrIntegral na false
+        EquationOrIntegral = false;
+        return;
+    end
+
+    % zavoláme si funkciu, ktorá bude kontrolovať, či užívateľ zadal správne údaje
+    while ~strcmpi(userChoice, '1') && ~strcmpi(userChoice, '2')
+
+        % vypíšeme do konzoly, že užívateľ zadal nesprávne údaje a bude mať možnosť znova zadať údaje
+        disp('Nesprávne údaje, skúste znova.');
+        userChoice = input(['Vyberte si medzi rovnicou a určitým integrálom. ', newline, 'Rovnica = 1, Určitý integrál = 2: '], 's');
+
+        % ak užívateľ zadal 1, tak nastavíme premennú EquationOrIntegral na true a vrátime ju
+        if strcmpi(userChoice, '1')
+            EquationOrIntegral = true;
+            return;
+        % ak užívateľ zadal 2, tak nastavíme premennú EquationOrIntegral na false a vrátime ju
+        elseif strcmpi(userChoice, '2')
+            EquationOrIntegral = false;
+            return;
+        end
+    end
+end
+
+function integralValue = performSimpsonMethodAndSaveEveryStepAndResultIntoFile(f, lowerBound, upperBound, epsilon, iterator, parameterA, parameterB, parameterC, parameterK, parameterQ, parameterR, parameterS)
+    % vytvoríme/otvoríme súbor Integral.txt, do ktorého budeme zapisovať výsledky
+    integralTxt = fopen('OutputFiles/Integral.txt', 'a');
+
+    % inicializujeme premennú integralValue, ktorá bude obsahovať výslednú hodnotu integrálu
+    integralValue = 0;
+
+    % Zapíšeme relevantné informácie do súboru Rovnica.txt
+    fprintf(integralTxt, "\n");
+    fprintf(integralTxt, "##########################################################\n");
+    fprintf(integralTxt, "###     Vstupný súbor DataParametre.txt %d. riadok      ###\n", iterator);
+    fprintf(integralTxt, "##########################################################\n");
+    fprintf(integralTxt, "\n");
+
+    fprintf(integralTxt, "------------------------------------------------------------\n");
+    fprintf(integralTxt, "        Výpočet integrálu pomocou Simpsonovej metódy\n");
+    fprintf(integralTxt, "------------------------------------------------------------\n");
+    
+    fprintf(integralTxt, "Integral vyzerá nasledovne: I = %d - %d ∫ (%d*x^2 + %d*x + %d) / (%d*x + %d)*(%d*x + %d) dx\n\n", lowerBound, upperBound, parameterA, parameterB, parameterC, parameterK, parameterQ, parameterR, parameterS);
+
+    % Symbolické výrazy pre derivácie
+    syms x
+    % symbolický výraz pre integral
+    ff(x) = f(x);
+    % štvrtá derivácia našej symbolickej rovnice
+    d4f(x) = diff(ff(x), 4);
+    % výraz pre štvrtú derivácu
+    expresion = formula(d4f);
+    % funkcia pre štvrtú derivácu
+    d4fn = matlabFunction(expresion);
+
+    % zistíme najväčšiu hodnotu štvrtéj derivácie na danom intervale
+    maxFunctionValue = d4fn(lowerBound);
+
+    % prechádzame cez interval a zistujeme, či je hodnota štvrtej derivácie na danom intervale väčšia ako maxFunctionValue po krokoch epsilon
+    for i = lowerBound : epsilon : upperBound
+        % zistíme hodnotu štvrtej derivácie na danom intervale
+        tempMaxFunctionValue = d4fn(i);
+
+        % ak je hodnota štvrtej derivácie na danom intervale väčšia ako maxFunctionValue, tak nastavíme maxFunctionValue na hodnotu štvrtej derivácie na danom intervale
+        if tempMaxFunctionValue > maxFunctionValue
+            maxFunctionValue = tempMaxFunctionValue;
+        end
+    end
+
+    if maxFunctionValue == NaN || maxFunctionValue == Inf
+        disp('Nastala chyba pri výpočte štvrtej derivácie.');
+        fprintf(integralTxt, "Nastala chyba pri výpočte štvrtej derivácie, takže sa nedá vypočítať integral pomocou Simpsonovej metódy.\n");
+        return;
+    end
+
+    % zapíšeme do súboru Integral.txt najväčšiu hodnotu štvrtej derivácie na danom intervale
+    fprintf(integralTxt, "Najväčšia hodnota štvrtej derivácie na danom intervale je: %f\n", maxFunctionValue);
+    % vypíšeme do konzoly najväčšiu hodnotu štvrtej derivácie na danom intervale
+    disp(['Najväčšia hodnota štvrtej derivácie na danom intervale je: ', num2str(maxFunctionValue)]);
+
+    % vypočítame n pre Simpsonovu metódu
+
+    % fix je funkcia v matlabe ktorá zaokrúhľuje číslo na celé číslo
+    % nthroot je funkcia v matlabe ktorá vypočíta n-tú odmocninu
+
+    if ((((upperBound - lowerBound)^5) / (180 * epsilon)) * maxFunctionValue) < 0
+        disp('Nastala chyba pri výpočte počtu subintervalov.');
+        fprintf(integralTxt, "Nastala chyba pri výpočte počtu subintervalov, takže sa nedá vypočítať integral pomocou Simpsonovej metódy.\n");
+        return;
+    end
+
+    % vypočítame n pre Simpsonovu metódu
+    % fix je funkcia v matlabe ktorá zaokrúhľuje číslo na celé číslo
+    % ceil je funkcia v matlabe ktorá zaokrúhľuje číslo nahor
+    % nthroot je funkcia v matlabe ktorá vypočíta n-tú odmocninu
+    % n je počet subintervalov
+    % nthroot((((upperBound - lowerBound)^5) / (180 * epsilon)) * maxFunctionValue, 4) je výraz pre výpočet n
+    n = fix(ceil((nthroot((((upperBound - lowerBound)^5) / (180 * epsilon)) * maxFunctionValue, 4))));
+
+    if n == NaN || n == Inf
+        disp('Nastala chyba pri výpočte počtu subintervalov.');
+        fprintf(integralTxt, "Nastala chyba pri výpočte počtu subintervalov, takže sa nedá vypočítať integral pomocou Simpsonovej metódy.\n");
+        return;
+    end
+
+    % ak je n nepárne číslo, tak ho zvýšime o 1
+    if (mod(n, 2) ~= 0)
+        n = n + 1;
+    end
+
+    % zapíšeme do súboru Integral.txt počet subintervalov
+    fprintf(integralTxt, "Počet subintervalov je: %d\n", n);
+    % vypíšeme do konzoly počet subintervalov
+    disp(['Počet subintervalov je: ', num2str(n)]);
+
+    % vypočítame h
+    h = abs((upperBound - lowerBound)) / n;
+    % zapíšeme do súboru Integral.txt vzdialenosť uzlových bodov
+    fprintf(integralTxt, "Vzdialenosť uzlových bodov je: %f\n", h);
+    % vypíšeme do konzoly vzdialenosť uzlových bodov
+    disp(['Vzdialenosť uzlových bodov je: ', num2str(h)]);
+
+    % matica intervals bude obsahovať všetky hodnoty x, ktoré budeme používať
+    intervals = zeros(1, n + 1);
+
+    % prechádzame cez všetky hodnoty x a vypočítavame ich
+    for i = 1 : n + 1
+        % ak sme na konci, tak nastavíme poslednú hodnotu na hornú hranicu
+        if i == n
+            intervals(i) = upperBound;
+            continue;
+        end
+
+        % vypočítame hodnotu x
+        intervals(i) = lowerBound + h * (i - 1);
+    end
+
+    % Párne a nepárne čísla
+    even = 0;
+    odd = 0;
+
+    % Zapíšeme do súboru Integral.txt informácie o priebehu výpočtu
+    fprintf(integralTxt, "\nVýpočet súčtov pre párne a nepárne čísla:\n");
+    fprintf(integralTxt, "---------------------------------------------\n");
+
+    for i = 1 : n - 1
+        % Ak je číslo párne, tak ho pridáme do párnych čísel
+        if (mod(i, 2) == 0)
+            even = even + f(intervals(i + 1));
+            fprintf(integralTxt, "Párne číslo: f(x_%d) = f(%.5f) = %.5f\n", i, intervals(i + 1), f(intervals(i + 1)));
+        % Ak je číslo nepárne, tak ho pridáme do nepárnych čísel
+        else
+            odd = odd + f(intervals(i + 1));
+            fprintf(integralTxt, "Nepárne číslo: f(x_%d) = f(%.5f) = %.5f\n", i, intervals(i + 1), f(intervals(i + 1)));
+        end
+    end
+
+    % Zapíšeme do súboru Integral.txt súčet párnych a nepárnych hodnôt
+    fprintf(integralTxt, "\nSúčet párnych hodnôt: %.5f\n", odd);
+    fprintf(integralTxt, "Súčet nepárnych hodnôt: %.5f\n", even);
+    fprintf(integralTxt, "---------------------------------------------\n");
+
+    % Vypočítame hodnotu určitého integrálu pomocou vzorca Simpsonovej metódy
+    % (h / 3) * (f(lowerBound) + f(upperBound) + 4 * odd + 2 * even)
+    integralValue = (h / 3) * (f(lowerBound) + f(upperBound) + 4 * odd + 2 * even);
+
+    % Zapíšeme do súboru Integral.txt informácie o výpočte vzorca Simpsonovej metódy
+    fprintf(integralTxt, "\nVýpočet vzorca Simpsonovej metódy:\n");
+    fprintf(integralTxt, "-------------------------------------------------\n");
+    fprintf(integralTxt, "f(a) = f(%.5f) = %.5f\n", lowerBound, f(lowerBound));
+    fprintf(integralTxt, "f(b) = f(%.5f) = %.5f\n", upperBound, f(upperBound));
+    fprintf(integralTxt, "4 * Súčet nepárnych hodnôt = 4 * %.5f = %.5f\n", odd, 4 * odd);
+    fprintf(integralTxt, "2 * Súčet párnych hodnôt = 2 * %.5f = %.5f\n", even, 2 * even);
+    fprintf(integralTxt, "-------------------------------------------------\n");
+
+    % Zapíšeme do súboru Integral.txt výslednú hodnotu určitého integrálu vo forme vzorca
+    fprintf(integralTxt, "Výsledná hodnota určitého integrálu je: (h/3) * [f(a) + f(b) + 4 * Súčet nepárnych hodnôt + 2 * Súčet párnych hodnôt] = \n(%.5f/3) * [%.5f + %.5f + 4 * %.5f + 2 * %.5f] = %f\n", h, f(lowerBound), f(upperBound), odd, even, integralValue);
+
+
+    % Vypíšeme do konzoly informácie o výpočte vzorca Simpsonovej metódy
+    disp(['f(a) = f(', num2str(lowerBound), ') = ', num2str(f(lowerBound))]);
+    disp(['f(b) = f(', num2str(upperBound), ') = ', num2str(f(upperBound))]);
+    disp(['4 * Súčet nepárnych hodnôt = 4 * ', num2str(odd), ' = ', num2str(4 * odd)]);
+    disp(['2 * Súčet párnych hodnôt = 2 * ', num2str(even), ' = ', num2str(2 * even)]);
+
+    % Vypíšeme do konzoly výslednú hodnotu určitého integrálu vo forme vzorca
+    disp(['Výsledná hodnota určitého integrálu je: (h/3) * [f(a) + f(b) + 4 * Súčet nepárnych hodnôt + 2 * Súčet párnych hodnôt] = (', num2str(h), '/3) * [', num2str(f(lowerBound)), ' + ', num2str(f(upperBound)), ' + 4 * ', num2str(odd), ' + 2 * ', num2str(even), '] = ', num2str(integralValue), newline]);
+
+    % zavrieme súbor Integral.txt
+    fclose(integralTxt);
 end
 
 
