@@ -81,6 +81,7 @@ function main()
                 % Výpis, že úloha bola úspešne dokončená
                 disp('Úloha 1 bola úspešne dokončená.');
                 % Výpis, že sa pokračuje s úlohou 2
+                inputForSecondTask = input('Zadajte hocičo alebo stlačte enter pre pokračovanie s úlohou 2: ', 's');
                 disp('Teraz budete pokračovať s úlohou 2.');
                 pause(2);
                 % Spustenie úlohy 2
@@ -92,6 +93,7 @@ function main()
                 % Výpis, že úloha bola úspešne dokončená
                 disp('Úloha 2 bola úspešne dokončená.');
                 % Výpis, že sa pokračuje s úlohou 1
+                inputForFirstTask = input('Zadajte hocičo alebo stlačte enter pre pokračovanie s úlohou 1: ', 's');
                 disp('Teraz budete pokračovať s úlohou 1.');
                 pause(2);
                 % Spustenie úlohy 1
@@ -239,7 +241,8 @@ function parameterA = getParameterA(iterator, DataParametersInputMatrix)
 
     % opýtame sa používateľa, že či chce zadať parameter a on alebo načítať
     % to zo súboru
-    userChoice = input('Chcete zadať vstup pre parameter a vy alebo načítať to zo vstupného súboru? (Zadajte z možností a, y, ano, yes ak ano - hocičo iné ak nechcete):', 's');
+    disp('Chcete zadať parameter a alebo ho načítať zo súboru?');
+    userChoice = input('(Zadajte z možností a, y, ano, yes ak ano - hocičo iné ak ho chcete načítať zo súboru):', 's');
     disp(newline);
 
     % V prípade, keď používateľ chce zadat parameter ako vstup
@@ -617,7 +620,8 @@ end
 function [parameterB, parameterC, parameterD] = getParametersBCD(iterator, DataParametersInputMatrix)
     % opýtame sa používateľa, že či chce zadať parametre b, c, d on alebo načítať
     % to zo súboru
-    userChoice = input('Chcete zadať vstup pre parametre b, c, d vy alebo chcete ich načítať zo súboru? (Zadajte z možností a, y, ano, yes ak ano - hocičo iné ak nechcete):', 's');
+    disp('Chcete zadať parametre b, c, d alebo ich načítať zo súboru?');
+    userChoice = input('(Zadajte z možností a, y, ano, yes ak ano - hocičo iné ak ich chete načítať zo súboru):', 's');
     disp(newline);
 
     % V prípade, keď používateľ chce zadat parametre ako vstup
@@ -889,7 +893,10 @@ function askForSeparation(parameterA, parameterB, parameterC, parameterD, f)
     % Pokiaľ náš vstup nie je platný
     while (~validInput)
         % Pýtame sa na vstup od používateľa s inštrukciami
-        separateInput = input("Chcete separovať rovnicu na g(x) a h(x), kde h(x) bude záporná? Zadajte 'y' alebo 'Y' alebo 'yes' alebo 'YES' alebo 'ano' alebo 'ANO' keď ano a 'n' alebo 'N' alebo 'no' alebo 'NO' alebo 'nie' alebo 'NIE' keď nechcete: ", 's');
+        disp('Chcete rozdeliť funkciu f(x) na g(x) a h(x)?');
+        disp('Rozdelenie vám uľahčí vidieť reálne koreňe funkcie f');
+        disp('Ak áno, zadajte a, ano, ANO, y alebo Y');
+        separateInput = input("ak nechcete, zadajte n, N, no, NO, nie, NIE: ", 's');
 
         % V prípade keď používateľ chce separovať
         if (strcmpi(separateInput, 'y') || strcmpi(separateInput, 'yes') || strcmpi(separateInput, 'ano'))
@@ -1034,6 +1041,13 @@ function intervals = getIntervalsAndSaveThemIntoFile(f, rootsCount, a, b, c, d)
     end
 
     if strcmpi(choiceHelp, "1")
+
+        % budeme počítať koľkokrát zadal používateľ neplatný vstup
+        badIntervalsCount = 0;
+
+        % hláška pre používateľa o tom, že ak zadá 3krát zadá neplatný interval, tak sa automaticky vygenerujú intervaly pre korene
+        disp('Ak zadáte 3krát neplatný interval, tak sa automaticky vygenerujú intervaly pre korene!');
+
         % prechádzame cez počtu koreňov
         for i = 1 : rootsCount
             valid_interval = false; % inicializujeme premennú pre validitu intervalu
@@ -1094,6 +1108,12 @@ function intervals = getIntervalsAndSaveThemIntoFile(f, rootsCount, a, b, c, d)
                         disp("Interval neobsahuje práve jeden koreň. Skúste znova.");
                         disp(['f(inf) * f(sup) < 0 neplatí, vyšlo to na ', num2str(f(inf) * f(sup))]);
                         disp('Musíte interval zadať tak, aby po vynásobení ich funkčných hodnôt vrátilo záporné číslo!');
+                        badIntervalsCount = badIntervalsCount + 1;
+
+                        if badIntervalsCount >= 3
+                            disp('Zadali ste aspoň 3krát neplatný interval, tak sa automaticky vygenerujú intervaly pre korene!');
+                            break;
+                        end
                     end
                 end
 
@@ -1103,10 +1123,22 @@ function intervals = getIntervalsAndSaveThemIntoFile(f, rootsCount, a, b, c, d)
                 for j = 1:(i - 1)
                     if (intervals(j,2) <= sup && intervals(j,3) >= sup) || (intervals(j,2) <= inf && intervals(j,3) >= inf)
                         valid_interval = false;
-                        disp("Zadaný interval sa prekrýva s už existujúcim intervalom. Skúste znova.");
+                        disp("Zadaný interval sa prekrýva s už existujúcim intervalom.");
+                        badIntervalsCount = badIntervalsCount + 1;
+                        if badIntervalsCount >= 3
+                            disp('Zadali ste aspoň 3krát neplatný interval, tak sa automaticky vygenerujú intervaly pre korene!');
+                        end
                         break;
                     end
                 end
+
+                if badIntervalsCount >= 3
+                    break;
+                end
+            end
+
+            if badIntervalsCount >= 3
+                break;
             end
 
             % Ak naše intervaly sú validné, obsahujú práve jeden koreň, uložíme
@@ -1117,6 +1149,10 @@ function intervals = getIntervalsAndSaveThemIntoFile(f, rootsCount, a, b, c, d)
             % Informujeme používateľa o tom, že sme uložili hranice do matici
             disp(['Správne hranice, uložili sme ich do matice s menom "intervals"', newline]);
         end  
+
+        if badIntervalsCount >= 3
+            intervals = generateIntervals(rootsCount, a, b, c, d, f);
+        end
     elseif strcmpi(choiceHelp, "2")
         intervals = generateIntervals(rootsCount, a, b, c, d, f);
     end
@@ -1209,7 +1245,8 @@ end
 function epsilon = getEpsilon(iterator, DataParametersInputMatrix)
     % Pýtame sa od používateľa, aby zadal že či chce zadať epsilon on,
     % alebo to chce načítať zo súboru
-    userChoice = input('Chcete zadať vstup pre epsilon vy? (Zadajte z možností a, y, ano, yes ak ano - hocičo iné ak nechcete):', 's');
+    disp('Chcete zadať vstup pre epsilon vy alebo načítať zo súboru?');
+    userChoice = input('(Zadajte z možností a, y, ano, yes ak ano - hocičo iné ak ho chcete načítať zo súboru):', 's');
     disp(newline);
 
     % V prípade, keď používateľ chce zadat epsilon
@@ -1342,7 +1379,11 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         upperBisectionBound = intervals(root, 3);
 
         % Zapíšeme interval, ktorý bol použitý v bisekcii
-        fprintf(EquationTxt, "\n%d. Interval: [%g, %g]\n", root, lowerBisectionBound, upperBisectionBound);
+        fprintf(EquationTxt, "\n%d. Interval: [%g, %g]\n\n", root, lowerBisectionBound, upperBisectionBound);
+
+        fprintf(EquationTxt, "\n--------------------------\n");
+        fprintf(EquationTxt, "Jednotlivé kroky bisekcie:\n");
+        fprintf(EquationTxt, "--------------------------");
 
         % zaznamenáme čas pred výpočtom bisekcie pre daný interval
         tic;
@@ -1374,6 +1415,16 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
             if (f(middle) == 0)
                 % kedže nemusíme pokračovať s bisekciou, použijeme príkaz
                 % break, čo nám pozastaví celú iteráciu a vystúpi z nej
+
+                % Ak sme našli koreň na prvý krok tak uložíme informácie
+                % do súboru
+                if (iterator == 1)
+                    fprintf(EquationTxt, "\n%d. krok\n", iterator);
+                    fprintf(EquationTxt, "Interval: [%g, %g]\n", lowerBisectionBound, upperBisectionBound);
+                    fprintf(EquationTxt, "Stred: %g\n", middle);
+                    fprintf(EquationTxt, "f(stred): %g\n", f(middle));
+                end
+
                 break;
             elseif (f(middle) * f(lowerBisectionBound) < 0)
                 % V prípade, ak funkčná hodnota stredu vynásobená s funkčnou
@@ -1388,6 +1439,11 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
                 disp('Nastavujem doľné ohraničenie na stred, lebo f(stred) * f(doľná hranica) > 0...');
                 lowerBisectionBound = middle;
             end
+
+            fprintf(EquationTxt, "\n%d. krok\n", iterator);
+            fprintf(EquationTxt, "Interval: [%g, %g]\n", lowerBisectionBound, upperBisectionBound);
+            fprintf(EquationTxt, "Stred: %g\n", middle);
+            fprintf(EquationTxt, "f(stred): %g\n", f(middle));
         end
         % zaznamenáme čas po výpočte bisekcie pre daný interval
         endTime = toc;
@@ -1438,6 +1494,10 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         % Zapíšeme príslušné informácie o vykonanej bisekcií pre konkrétny
         % koreň
 
+        fprintf(EquationTxt, "\n--------------------");
+        fprintf(EquationTxt, "\nVýsledky bisekcie: \n");
+        fprintf(EquationTxt, "--------------------");
+
         % konkrétny koreň ktorú sme našli
         fprintf(EquationTxt, "\nKoreň: %.*g\n", decimals, middle);
         % funkčná hodnota pre koreň
@@ -1452,6 +1512,7 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         fprintf(EquationTxt, "Velkosť intervalu: %.*g\n", decimals, abs(upperBisectionBound - lowerBisectionBound));
         % Odhad chyby
         fprintf(EquationTxt, "Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = %s\n", errorEstimateStr);
+        fprintf(EquationTxt, "------------------------------------------------------------\n\n");
     end
 
     % zaznamenáme čas po výpočte bisekcie, uložíme ho to premennej
@@ -1567,12 +1628,16 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
             % v prípade, ak neplatí Furierova podmienka tak informujeme
             % používateľa o tom
             fprintf(EquationTxt, "\nInterval nesplňal Furierove podmienky, pokračoval som s ďalším koreňom, ak existovala \n");
-            disp(['Interval <%g, %g> nespĺňa Fourierove podmienky, pokračujem s ďaľším koreňom', a_interval, b_interval, newline]);
+            disp(['Interval <' num2str(a_interval) ', ' num2str(b_interval) '> nesplňal Furierove podmienky, pokračujem s ďalším koreňom, ak existuje']);
             errorEstimateMatrix = [errorEstimateMatrix, NaN];
             newtonRootsVector = [newtonRootsVector, NaN];
             % a pokračujeme s ďaľšími intervalmi
             continue;
         end
+
+        fprintf(EquationTxt, "\n-------------------------------------\n");
+        fprintf(EquationTxt, "Jednotlivé kroky Newtonovej metódy:\n");
+        fprintf(EquationTxt, "-------------------------------------\n");
 
         % Newtonova metóda
 
@@ -1602,6 +1667,12 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
 
             % Nastavenie nového x0
             x0 = xkk;
+
+            fprintf(EquationTxt, "%d. krok\n", k);
+            fprintf(EquationTxt, "x%d = %g\n", k, x0);
+            fprintf(EquationTxt, "f(x%d) = %g\n", k, f(x0));
+            fprintf(EquationTxt, "f'(x%d) = %g\n", k, f1(x0));
+            fprintf(EquationTxt, "Stop = %g\n\n", Stop);
         end
         % koniec merania času
         endTime = toc;
@@ -1624,7 +1695,7 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         % opačnej funkcie na našom intervale
         M = 0;
 
-        % Dff1m je druhá derivácia opačnej funkcie
+        % Dff1m je prvá derivácia opačnej funkcie
         Dff1m(x) = diff((-1) * ff(x));
 
         % Prevedieme Dff1m na funkciu vhodnú pre Matlab
@@ -1674,6 +1745,10 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         disp(['Odhad absolútnej chyby pre Newtonovu metódu je ER = ', errorEstimateStr, '.']);
 
         % Zapíšeme príslušné informácie o vykonanej Newtonovej metóde pre konkrétny
+
+        fprintf(EquationTxt, '\n---------------------------\n');
+        fprintf(EquationTxt, 'Výsledky Newtonovej metódy:\n');
+        fprintf(EquationTxt, '---------------------------\n');
 
         % konkrétny koreň ktorý sme našli
         fprintf(EquationTxt, "\nKoreň: %.*g\n", decimals, x0);
@@ -2310,7 +2385,7 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                         parameterA = getParameterA(iterator, DataParametersInputMatrix);
                     else
                         disp(['V stlpci ', num2str(iterator), ' sa nachádza neplatný vstup pre parameter a, pretože je nulový alebo neplatný.']);
-                        userChoice = input('Chcete pokračovať s ďalším riadkom? alebo chcete zadať vstup pre parameter a? (y/n), v prípade, že chcete zadať vstup pre parameter a, zadajte y, ak nie, zadajte n: ', 's');
+                        userChoice = input('v prípade, že chcete zadať vstup pre parameter a, zadajte y, ak pokračovať, zadajte n: ', 's');
 
                         if strcmpi(userChoice, 'y')
                             parameterA = getParameterAFromUser();
@@ -2327,7 +2402,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                         [parameterB, parameterC, parameterD] = getParametersBCD(iterator, DataParametersInputMatrix);
                     else
                         disp(['V stĺpcoch ', num2str(iterator), ' sa nachádzajú neplatné vstupy pre parametre b, c, d, pretože aspoň dva z nich sú nulové alebo neplatné.']);
-                        userChoice = input('Chcete pokračovať s ďalším riadkom? alebo chcete zadať vstupy pre parametre b, c, d? (y/n), v prípade, že chcete zadať vstupy pre parametre b, c, d, zadajte y, ak nie, zadajte n: ', 's');
+                        disp(['V prípade, že chcete zadať vstupy pre parametre b, c, d, zadajte y, ak chcete pokračovať s ďalším riadkom, zadajte hocičo iné.']);
+                        userChoice = input('zadajte y ak zadať, zadajte hocičo iné, ak pokračovať: ', 's');
 
                         if strcmpi(userChoice, 'y')
                             [parameterB, parameterC, parameterD] = getParametersBCDFromUser();
@@ -2502,7 +2578,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % preskočíme tento riadok
                     if isnan(DataParametersInputMatrix(iterator, 2)) || ~isreal(DataParametersInputMatrix(iterator, 2))
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je správna hodnota parametra a.']);
-                        userChoice = input('Chcete zadať hodnotu parametra a alebo pokračovať s ďalším riadkom? ( zadajte 1 - zadať parameter a, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
+                        disp('Chcete zadať hodnotu parametra a alebo pokračovať s ďalším riadkom?');
+                        userChoice = input('( zadajte 1 - zadať parameter a, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
 
                         if strcmpi(userChoice, '1')
                             parameterA = getParameterAForIntegral();
@@ -2527,7 +2604,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % preskočíme tento riadok
                     if isnan(DataParametersInputMatrix(iterator, 3)) || ~isreal(DataParametersInputMatrix(iterator, 3))
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je správna hodnota parametra b.']);
-                        userChoice = input('Chcete zadať hodnotu parametra b alebo pokračovať s ďalším riadkom? ( zadajte 1 - zadať parameter b, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
+                        disp('Chcete zadať hodnotu parametra b alebo pokračovať s ďalším riadkom?');
+                        userChoice = input('( zadajte 1 - zadať parameter b, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
 
                         if strcmpi(userChoice, '1')
                             parameterB = getParameterBForIntegral();
@@ -2551,7 +2629,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % preskočíme tento riadok
                     if isnan(DataParametersInputMatrix(iterator, 4)) || ~isreal(DataParametersInputMatrix(iterator, 4))
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je správna hodnota parametra c.']);
-                        userChoice = input('Chcete zadať hodnotu parametra c alebo pokračovať s ďalším riadkom? ( zadajte 1 - zadať parameter c, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
+                        disp('Chcete zadať hodnotu parametra c alebo pokračovať s ďalším riadkom?');
+                        userChoice = input('( zadajte 1 - zadať parameter c, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
 
                         if strcmpi(userChoice, '1')
                             parameterC = getParameterCForIntegral();
@@ -2576,7 +2655,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % preskočíme tento riadok
                     if isnan(DataParametersInputMatrix(iterator, 6)) || ~isreal(DataParametersInputMatrix(iterator, 6))
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je správna hodnota parametra k.']);
-                        userChoice = input('Chcete zadať hodnotu parametra k alebo pokračovať s ďalším riadkom? ( zadajte 1 - zadať parameter k, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
+                        disp('Chcete zadať hodnotu parametra k alebo pokračovať s ďalším riadkom?');
+                        userChoice = input('( zadajte 1 - zadať parameter k, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
 
                         if strcmpi(userChoice, '1')
                             parameterK = getParameterKForIntegral();
@@ -2600,7 +2680,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % preskočíme tento riadok
                     if isnan(DataParametersInputMatrix(iterator, 8)) || ~isreal(DataParametersInputMatrix(iterator, 8))
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je správna hodnota parametra q.']);
-                        userChoice = input('Chcete zadať hodnotu parametra q alebo pokračovať s ďalším riadkom? ( zadajte 1 - zadať parameter q, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
+                        disp('Chcete zadať hodnotu parametra q alebo pokračovať s ďalším riadkom?');
+                        userChoice = input('( zadajte 1 - zadať parameter q, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
 
                         if strcmpi(userChoice, '1')
                             parameterQ = getParameterQForIntegral();
@@ -2624,7 +2705,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % preskočíme tento riadok
                     if isnan(DataParametersInputMatrix(iterator, 9)) || ~isreal(DataParametersInputMatrix(iterator, 9))
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je správna hodnota parametra r.']);
-                        userChoice = input('Chcete zadať hodnotu parametra r alebo pokračovať s ďalším riadkom? ( zadajte 1 - zadať parameter r, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
+                        disp('Chcete zadať hodnotu parametra r alebo pokračovať s ďalším riadkom?');
+                        userChoice = input('( zadajte 1 - zadať parameter r, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
 
                         if strcmpi(userChoice, '1')
                             parameterR = getParameterRForIntegral();
@@ -2648,7 +2730,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % preskočíme tento riadok
                     if isnan(DataParametersInputMatrix(iterator, 10)) || ~isreal(DataParametersInputMatrix(iterator, 10))
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je správna hodnota parametra s.']);
-                        userChoice = input('Chcete zadať hodnotu parametra s alebo pokračovať s ďalším riadkom? ( zadajte 1 - zadať parameter s, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
+                        disp('Chcete zadať hodnotu parametra s alebo pokračovať s ďalším riadkom?');
+                        userChoice = input('( zadajte 1 - zadať parameter s, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
 
                         if strcmpi(userChoice, '1')
                             parameterS = getParameterSForIntegral();
@@ -2675,7 +2758,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                         % opytame sa uzivatela, ci chce znova zadat hodnoty
                         % pre k, q, r, s
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' je nulový menovateľ.']);
-                        userChoice = input('Chcete zadať hodnoty pre k, q, r, s alebo pokračovať s ďalším riadkom? ( zadajte 1 - zadať hodnoty pre k, q, r, s, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
+                        disp('Chcete zadať hodnoty pre k, q, r, s alebo pokračovať s ďalším riadkom?');
+                        userChoice = input('( zadajte 1 - zadať hodnoty pre k, q, r, s, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
 
                         if strcmpi(userChoice, '1')
                             [parameterK, parameterQ, parameterR, parameterS] = getParametersKQRSTForIntegralInCaseOfZeroDenominator();
@@ -2699,7 +2783,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % preskočíme tento riadok
                     if isnan(DataParametersInputMatrix(iterator, 11)) || ~isreal(DataParametersInputMatrix(iterator, 11))
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je správna hodnota dolnej hranice integrácie.']);
-                        userChoice = input('Chcete zadať hodnotu dolnej hranice integrácie alebo pokračovať s ďalším riadkom? ( zadajte 1 - zadať dolnú hranicu integrácie, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
+                        disp('Chcete zadať dolnú hranicu integrácie alebo pokračovať s ďalším riadkom?');
+                        userChoice = input('( zadajte 1 - zadať dolnú hranicu integrácie, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
 
                         if strcmpi(userChoice, '1')
                             lowerBound = getLowerBoundForIntegral();
@@ -2723,7 +2808,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % preskočíme tento riadok
                     if isnan(DataParametersInputMatrix(iterator, 12)) || ~isreal(DataParametersInputMatrix(iterator, 12))
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je správna hodnota horná hranica integrácie.']);
-                        userChoice = input('Chcete zadať hodnotu horná hranica integrácie alebo pokračovať s ďalším riadkom? ( zadajte 1 - zadať hornú hranicu integrácie, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
+                        disp('Chcete zadať hodnotu hornej hranici integrácie alebo pokračovať s ďalším riadkom?');
+                        userChoice = input('( zadajte 1 - zadať hornú hranicu integrácie, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
 
                         if strcmpi(userChoice, '1')
                             upperBound = getUpperBoundForIntegral();
@@ -2768,7 +2854,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % integrácie, ak zvolí niečo iné, tak preskočíme tento riadok
                     if isnan(DataParametersInputMatrix(iterator, 13)) || ~isreal(DataParametersInputMatrix(iterator, 13)) || DataParametersInputMatrix(iterator, 13) < 0
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je správna hodnota presnosti integrácie.']);
-                        userChoice = input('Chcete zadať hodnotu presnosti integrácie alebo pokračovať s ďalším riadkom? ( zadajte 1 - zadať presnosť integrácie, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
+                        disp('Chcete zadať hodnotu presnosti integrácie alebo pokračovať s ďalším riadkom? ');
+                        userChoice = input('(zadajte 1 - zadať presnosť integrácie, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
 
                         if strcmpi(userChoice, '1')
                             epsilon = getEpsilonForIntegral();
