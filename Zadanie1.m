@@ -13,13 +13,23 @@ format long;
 main();
 
 % Hlavna funkcia programu s nazvom main
-% Funkcia main slúži na výber úloh, ktoré chceme spustiť
-% Funkcia main sa spustí automaticky po spustení programu
+% Funkcia main slúži na výber úloh, ktoré chceme spustiť, sa spustí automaticky po spustení programu
 
 % spustí to 2 hlavné funkcie, ktoré sú v tomto súbore
 % a výsledky ich výpočtov budú uložené do súborov v priečinku OutputFiles
 % tie 2 hlavné funkcie sú equationSeparationWithAproximationsAndSimpsonMethod a lagrangeInterpolationAndLeastSquaresMethod
 function main()
+
+    % Iniciálne premazanie súborov v priečinku OutputFiles
+    % Ak by sa v nich nachádzali nejaké dáta pred spustením programu, tak sa vymažú
+    % (v mode 'w' sa otvorí/vytvori súbor na zápis, pomocou fclose obsah súboru sa premaže (kvôli mode w) a súbor sa zavrie)
+    fid = fopen('OutputFiles/Rovnica.txt', 'w');        fclose(fid);
+    fid = fopen('OutputFiles/Porovnania.txt', 'w');     fclose(fid);
+    fid = fopen('OutputFiles/Integral.txt', 'w');       fclose(fid);
+    fid = fopen('OutputFiles/Aproximacia.txt', 'w');    fclose(fid);
+
+    % while cyklus 
+    % cyklus sa opakuje, kým používateľ nezadá na konci úlohy že už nechce znova spustiť "program" (hlavnú funkciu)
     while true
         % Vítame používateľa
         disp('Vitajte v programe Zadanie1 (Zadanie-06) - Kde môžete vypočítať separácie koreňov rovnice, aproximovať ich reálne koreňe s bisekciou a s newtonovou metódou, a vypočítať určitý integrál.');
@@ -33,6 +43,7 @@ function main()
     
         % Získanie vstupu od používateľa
         mainUserChoice = input('Zadajte svoju voľbu: ( 1 alebo 2 ) ', 's');
+        % Premenná mainUserChoiceNumber slúži na kontrolu vstupu od používateľa
         mainUserChoiceNumber = 0;
     
         % Kontrola vstupu od používateľa
@@ -606,7 +617,7 @@ end
 function [parameterB, parameterC, parameterD] = getParametersBCD(iterator, DataParametersInputMatrix)
     % opýtame sa používateľa, že či chce zadať parametre b, c, d on alebo načítať
     % to zo súboru
-    userChoice = input('Chcete zadať vstup pre parametre b, c, d vy? (Zadajte z možností a, y, ano, yes ak ano - hocičo iné ak nechcete):', 's');
+    userChoice = input('Chcete zadať vstup pre parametre b, c, d vy alebo chcete ich načítať zo súboru? (Zadajte z možností a, y, ano, yes ak ano - hocičo iné ak nechcete):', 's');
     disp(newline);
 
     % V prípade, keď používateľ chce zadat parametre ako vstup
@@ -766,7 +777,7 @@ function [infOfSeparation, supOfSeparation] = getBounds()
     % opýtame sa na to znova
     while (~checkRealNumber(infOfSeparationHelp))
         % Získame vstup od používateľa pre dolnú hranicu priblíženia
-        infOfSeparationHelp = input("Zadajte dolnú hranicu priblíženia: ", "s");
+        infOfSeparationHelp = input("Zadajte dolnú hranicu priblíženia na zobrazenie grafov v osobitnom okienku : ", "s");
         if (checkRealNumber(infOfSeparationHelp))
             % Konverzia vstupu na číslo
             infOfSeparation = str2double(infOfSeparationHelp);
@@ -780,7 +791,7 @@ function [infOfSeparation, supOfSeparation] = getBounds()
     % opýtame sa na to znova
     while (~checkRealNumber(supOfSeparationHelp))
         % Získame vstup od používateľa pre hornú hranicu priblíženia
-        supOfSeparationHelp = input("Zadajte hornú hranicu priblíženia: ", "s");
+        supOfSeparationHelp = input("Zadajte hornú hranicu priblíženia na zobrazenie grafov v osobitnom okienku : ", "s");
         if (checkRealNumber(supOfSeparationHelp))
             % Konverzia vstupu na číslo
             supOfSeparation = str2double(supOfSeparationHelp);
@@ -955,6 +966,8 @@ function rootsCount = getRootsCount(a, b, c, d)
     % koeficienty polynómu odovzdáme pre funkciu roots() vo forme polynómu
     % a to nám zistí reálne koreňe a uložíme to do premennej rootsVector
     rootsVector = roots([a, b, c, d]);
+    % odstránime duplikáty z vektoru koreňov
+    rootsVector = unique(rootsVector);
     % spočítame počet reálnych koreňov, len tých, ktorí nie sú imaginárne
     % čísla pomocou funkcie imag(), čo nám vráti 0 (nulu) v prípade keď to
     % nie je imaginárne (komplexné) číslo 
@@ -1006,73 +1019,106 @@ function intervals = getIntervalsAndSaveThemIntoFile(f, rootsCount, a, b, c, d)
     % pomohlo ušetriť neplatný vstup
     supHelp = '';
 
-    % prechádzame cez počtu koreňov
-    for i = 1 : rootsCount
-        % informujeme používateľa o tom, že pre ktorú koreň má zadať
-        % interval
-        fprintf("Zadajte interval pre %d. koreň: \n", i);
+    % Opýtame sa užívateľa že či chce zadať intervaly pre korene alebo ich automaticky
+    % vygenerovať
+    disp("Chcete zadať intervaly pre korene alebo ich automaticky vygenerovať? (Zadajte 1 pre zadať intervaly, 2 pre automaticky vygenerovať)");
+    % premenná pre výber používateľa
+    choice = 0;
+    % pokiaľ používateľ nezadal 1 alebo 2, tak sa ho budeme pýtať znova
+    choiceHelp = input("(Zadajte 1 pre zadať intervaly, 2 pre automaticky vygenerovať):", "s");
+    while ~strcmpi(choiceHelp, "1") && ~strcmpi(choiceHelp, "2")
+        % informujeme používateľa o tom, že zadal neplatný vstup
+        disp("Zadali ste neplatný vstup! Skúste znova!");
+        % pýtať sa ho znova
+        choiceHelp = input("(Zadajte 1 pre zadať intervaly, 2 pre automaticky vygenerovať):", "s");
+    end
 
-        % premenné pre dolné ohraničenie vo forme čísla, do ktorých budeme
-        % uložiť ich v prekonvertovanej forme zo vstupného reťazca od
-        % používateľa
-        inf = 0;
-        sup = 0;
+    if strcmpi(choiceHelp, "1")
+        % prechádzame cez počtu koreňov
+        for i = 1 : rootsCount
+            valid_interval = false; % inicializujeme premennú pre validitu intervalu
+    
+            while ~valid_interval
+                % informujeme používateľa o tom, že pre ktorú koreň má zadať
+                % interval
+                fprintf("Zadajte interval pre %d. koreň: \n", i);
+    
+                % premenné pre dolné ohraničenie vo forme čísla, do ktorých budeme
+                % uložiť ich v prekonvertovanej forme zo vstupného reťazca od
+                % používateľa
+                inf = 0;
+                sup = 0;
+    
+                % pokiaľ doľné ohraničenie alebo horné ohraničenie sú nulové, alebo
+                % pomocné premenné pre dolné a horné ohraničenie nie sú reálne
+                % čísla alebo súčin f(inf) * f(sup) je vačšia alebo rovná sa nule
+                while (~checkRealNumber(infHelp) || ~checkRealNumber(supHelp) || f(inf) * f(sup) >= 0)
+                    % pýtame sa na dolnú hranicu od používateľa a uložíme to do
+                    % premennej infHelp
+                    infHelp = input("Zadajte dolnú hranicu intervalu: ", "s");
+                    % pýtame sa na hornú hranicu od používateľa a uložíme to do
+                    % premennej supHelp
+                    supHelp = input("Zadajte hornú hranicu intervalu: ", "s");
+                    
+                    if (~checkRealNumber(infHelp) || ~checkRealNumber(supHelp))
+                        disp("Zadali ste neplatný vstup! Skúste znova!");
+                    end
+    
+                    % Prekonvertujeme infHelp z reťazca na double a uložíme ho do
+                    % premennej inf
+                    inf = str2double(infHelp);
+                    % Prekonvertujeme supHelp z reťazca na double a uložíme ho do
+                    % premennej sup
+                    sup = str2double(supHelp);
+    
+                    % Ak je dolná hranica väčšia ako horná hranica, vymeníme ich hodnoty
+                    if (inf > sup)
+                        % pomocné premenné temp do ktorej uložíme hodnotu horného
+                        % ohraničenia
+                        temp = sup;
+                        % do premennej horného ohraničenia uložíme doľné
+                        % ohraničenie
+                        sup = inf;
+                        % do premennej doľného ohraničenia uložíme hodnotu pomocnej
+                        % premennej temp ktorá obsahuje predošlú hodnotu hornej
+                        % hranici
+                        inf = temp;
+                        % Vypíšeme hlásenie, že sme vymenili hranice
+                        disp('Keďže ste zadali väčšiu doľnú hranicu ako hornú, vymenili sme ich!');
+                    end
 
-        % pokiaľ doľné ohraničenie alebo horné ohraničenie sú nulové, alebo
-        % pomocné premenné pre dolné a horné ohraničenie nie sú reálne
-        % čísla alebo súčin f(inf) * f(sup) je vačšia alebo rovná sa nule
-        while (~checkRealNumber(infHelp) || ~checkRealNumber(supHelp) || f(inf) * f(sup) >= 0)
-            % pýtame sa na dolnú hranicu od používateľa a uložíme to do
-            % premennej infHelp
-            infHelp = input("Zadajte dolnú hranicu intervalu: ", "s");
-            % pýtame sa na hornú hranicu od používateľa a uložíme to do
-            % premennej supHelp
-            supHelp = input("Zadajte hornú hranicu intervalu: ", "s");
-            
-            if (~checkRealNumber(infHelp) || ~checkRealNumber(supHelp))
-                disp("Zadali ste neplatný vstup! Skúste znova!");
+                     % ak súčin funkčnej hodnoty dolnej hranici a hornej hranicy je
+                    % kladné číslo, to znamená že v intervale nie je práve jeden
+                    % koreň, informujeme o tom používateľa
+                    if f(inf) * f(sup) >= 0
+                        disp("Interval neobsahuje práve jeden koreň. Skúste znova.");
+                        disp(['f(inf) * f(sup) < 0 neplatí, vyšlo to na ', num2str(f(inf) * f(sup))]);
+                        disp('Musíte interval zadať tak, aby po vynásobení ich funkčných hodnôt vrátilo záporné číslo!');
+                    end
+                end
+
+                valid_interval = true; % nastavíme validitu intervalu na true
+                % skontrolujeme, či nový interval sa neprekrýva s už existujúcimi intervalmi
+
+                for j = 1:(i - 1)
+                    if (intervals(j,2) <= sup && intervals(j,3) >= sup) || (intervals(j,2) <= inf && intervals(j,3) >= inf)
+                        valid_interval = false;
+                        disp("Zadaný interval sa prekrýva s už existujúcim intervalom. Skúste znova.");
+                        break;
+                    end
+                end
             end
 
-            % Prekonvertujeme infHelp z reťazca na double a uložíme ho do
-            % premennej inf
-            inf = str2double(infHelp);
-            % Prekonvertujeme supHelp z reťazca na double a uložíme ho do
-            % premennej sup
-            sup = str2double(supHelp);
+            % Ak naše intervaly sú validné, obsahujú práve jeden koreň, uložíme
+            % ich do nového riadku matici intervals vo forme: koreň, dolná
+            % hranica, horná hranica
+            intervals(i,:) =  [i, inf, sup];
 
-            % Ak je dolná hranica väčšia ako horná hranica, vymeníme ich hodnoty
-            if (inf > sup)
-                % pomocné premenné temp do ktorej uložíme hodnotu horného
-                % ohraničenia
-                temp = sup;
-                % do premennej horného ohraničenia uložíme doľné
-                % ohraničenie
-                sup = inf;
-                % do premennej doľného ohraničenia uložíme hodnotu pomocnej
-                % premennej temp ktorá obsahuje predošlú hodnotu hornej
-                % hranici
-                inf = temp;
-                % Vypíšeme hlásenie, že sme vymenili hranice
-                disp('Keďže ste zadali väčšiu doľnú hranicu ako hornú, vymenili sme ich!');
-            end
-
-            % ak súčin funkčnej hodnoty dolnej hranici a hornej hranicy je
-            % kladné číslo, to znamená že v intervale nie je práve jeden
-            % koreň, informujeme o tom používateľa
-            if f(inf) * f(sup) >= 0
-                disp("Interval neobsahuje práve jeden koreň. Skúste znova.");
-                disp(['f(inf) * f(sup) < 0 neplatí, vyšlo to na ', num2str(f(inf) * f(sup))]);
-                disp('Musíte interval zadať tak, aby po vynásobení ich funkčných hodnôt vrátilo záporné číslo!');
-            end
-        end
-
-        % Ak naše intervaly sú validné, obsahujú práve jeden koreň, uložíme
-        % ich do nového riadku matici intervals vo forme: koreň, dolná
-        % hranica, horná hranica
-        intervals(i,:) =  [i, inf, sup];
-
-        % Informujeme používateľa o tom, že sme uložili hranice do matici
-        disp(['Správne hranice, uložili sme ich do matice s menom "intervals"', newline]);
+            % Informujeme používateľa o tom, že sme uložili hranice do matici
+            disp(['Správne hranice, uložili sme ich do matice s menom "intervals"', newline]);
+        end  
+    elseif strcmpi(choiceHelp, "2")
+        intervals = generateIntervals(rootsCount, a, b, c, d, f);
     end
 
     % výpis intervalov používateľovi
@@ -1107,6 +1153,51 @@ function intervals = getIntervalsAndSaveThemIntoFile(f, rootsCount, a, b, c, d)
     end
 
     disp(['Informácie o separácii koreňov boli úspešne zapísané do súboru Rovnica.txt (OutputFiles/Rovnica.txt)', newline]);
+end
+
+% Funkcia generateIntervals, ktorá vygeneruje intervaly pre korene
+function intervals = generateIntervals(rootsCount, a, b, c, d, f)
+    % Vytvoríme vektor, ktorý bude obsahovať korene
+    rootsVector = roots([a, b, c, d]);
+    
+    % Vytvoríme vektor, ktorý bude obsahovať korene bez komplexných čísel
+    rootsVectorWithoutImaginary = rootsVector(imag(rootsVector) == 0);
+    
+    % Vytvoríme vektor, ktorý bude obsahovať korene bez komplexných čísel a
+    % duplicitných koreňov
+    rootsVectorWithoutImaginaryNoDuplicates = unique(rootsVectorWithoutImaginary);
+    
+    % Inicializujeme maticu pre intervaly
+    intervals = zeros(rootsCount, 3);
+    
+    % Prejdeme cez všetky korene
+    for i = 1:numel(rootsVectorWithoutImaginaryNoDuplicates)
+        % Nájdeme interval, ktorý obsahuje len jeden koreň
+        inf = rootsVectorWithoutImaginaryNoDuplicates(i);
+        sup = inf;
+        
+        % Rozšírime interval, kým nespĺňa podmienku Bolzanovej vety
+        while f(inf) * f(sup) >= 0
+            inf = inf - 0.05;
+            sup = sup + 0.05;
+        end
+        
+        % Skontrolujeme, či sa nový interval neprekrýva s predchádzajúcimi
+        for j = 1:i-1
+            % Ak sa prekrýva, posunieme hornú hranicu nového intervalu
+            while intervals(j, 2) <= sup && intervals(j, 3) >= inf
+                % Posunieme hornú hranicu nového intervalu
+                sup = sup + 0.05;
+                % Ak je potrebné, posunieme aj dolnú hranicu nového intervalu
+                if f(inf) * f(sup) >= 0
+                    inf = inf - 0.05;
+                end
+            end
+        end
+        
+        % Uložíme nájdený interval do matice 'intervals'
+        intervals(i, :) = [i, inf, sup];
+    end
 end
 
 % Funkcia getEpsilon, ktorá sa opýta používateľa, či chce zadať epsilon on,
@@ -1233,13 +1324,13 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
     % Zapíšeme našu rovnicu do súboru
     fprintf(EquationTxt, "Rovnica: %g * x^3 + %g * x^2 + %g * x + %g\n\n", a, b, c, d);
 
-    % zaznamenáme čas pred výpočtom bisekcie pre všetké koreňe
-    tic;
+    % čas pred začiatkom bisekcie
+    timeOfBisection = 0;
 
     % pre kazdy interval v matici intervals robime bisekciu
     for root = 1 : size(intervals, 1)
         % premenná iterator, slúži to ako krok, po vykonaní počet krokov
-        iterator = 1;
+        iterator = 0;
 
         % premenná middle, kďe budeme ukladať stred a po vykonaní bisekcie to
         % bude náš nájdený koreň funkcie pomocou bisekcie
@@ -1253,13 +1344,17 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         % Zapíšeme interval, ktorý bol použitý v bisekcii
         fprintf(EquationTxt, "\n%d. Interval: [%g, %g]\n", root, lowerBisectionBound, upperBisectionBound);
 
-        % Vykonáme bisekciu, kým sa nedosiahne naša presnosť, teda epsilon,
-        % zistíme to tak že z horného ohraničenia odčítame doľné ohraničenie a
-        % musí to byť menšie ako epsilon
+        % zaznamenáme čas pred výpočtom bisekcie pre daný interval
+        tic;
+        % Vykonáme bisekciu, kým sa nedosiahne naša presnosť * 2
+        % teda zastavovacia podmienka je: abs(upperBisectionBound - lowerBisectionBound) >= (2 * epsilon)
         while (abs(upperBisectionBound - lowerBisectionBound) >= (2 * epsilon))
             % vypočítame stred so spočítaním doľnej a hornej hranici a videlíme
             % to s 2 a uložíme to do premennej middle
             middle = (lowerBisectionBound + upperBisectionBound) / 2;
+
+            % zvýšime počet krokov o 1 (jeden)
+            iterator = iterator + 1;
     
             % Pridáme výsledky do riadku matice
             % Riadok v matici reprezentuje: krok, doľná hranica, horná hranica,
@@ -1293,13 +1388,14 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
                 disp('Nastavujem doľné ohraničenie na stred, lebo f(stred) * f(doľná hranica) > 0...');
                 lowerBisectionBound = middle;
             end
-    
-            % zvýšime počet krokov o 1 (jeden)
-            iterator = iterator + 1;
         end
+        % zaznamenáme čas po výpočte bisekcie pre daný interval
+        endTime = toc;
+        % pridáme čas do celkového času bisekcie
+        timeOfBisection = timeOfBisection + endTime;
     
         % Informujeme používateľa o tom, že sme našli koreň
-        disp([newline, 'Našiel som koreň, f(stred) * f(doľná hranica) = 0, ', 'na ', num2str(iterator - 1), '. iteráciu']);
+        disp([newline, 'Našiel som koreň, f(stred) = 0, ', 'na ', num2str(iterator), '. iteráciu']);
         % Vypíšeme koreň používateľovi
         disp(['Nájdený koreň je: ', num2str(middle), newline]);
 
@@ -1312,7 +1408,7 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         disp(['Výsledok bisekcie:', newline]);
         disp(['Koreň: ', num2str(middle)]);
         disp(['Funkčná hodnota pre koreň: ', num2str(f(middle))]);
-        disp(['Počet krokov: ', num2str(iterator - 1)]);
+        disp(['Počet krokov: ', num2str(iterator)]);
         disp(['Doľná hranica: ', num2str(lowerBisectionBound)]);
         disp(['Horná hranica: ', num2str(upperBisectionBound)]);
         disp(['Veľkosť intervalu: ', num2str(abs(upperBisectionBound - lowerBisectionBound)), newline]);
@@ -1321,7 +1417,7 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         % intervals(root, 3) je horné ohraničenie v matici intervals daného
         % intervalu, intervals(root, 2) je dolné ohraničenie v matici intervals daného
         % intervalu
-        errorEstimate = abs(intervals(root, 3) - intervals(root, 2)) / (2.^(iterator));
+        errorEstimate = abs(intervals(root, 3) - intervals(root, 2)) / (2.^(iterator + 1));
 
         errorEstimateMatrix = [errorEstimateMatrix, errorEstimate];
 
@@ -1349,7 +1445,7 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         % presnosť
         fprintf(EquationTxt, "Epsilon (presnosť): %.*g\n", decimals, epsilon);
         % počet krokov bisekcii
-        fprintf(EquationTxt, "Počet krokov: %d\n", iterator - 1);
+        fprintf(EquationTxt, "Počet krokov: %d\n", iterator);
         % Interval, v ktorom bol nájdený koreň
         fprintf(EquationTxt, "Interval, v ktorom bol najdený koreň: [%.*g, %.*g]\n", decimals, lowerBisectionBound, decimals, upperBisectionBound);
         % Velkosť intervalu
@@ -1426,7 +1522,7 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
     f2 = matlabFunction(expresion2);
 
     % zaznamenáme čas pred výpočtom bisekcie
-    tic;
+    timeOfNewtonMethod = 0;
 
     % Prechádzame všetkými intervalmi
     for i = 1 : size(intervals, 1)
@@ -1436,9 +1532,6 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         b_interval = intervals(i, 3);
 
         % Fourierove podmienky
-
-        % Prvá Furierova podmienka
-        test1 = f(a_interval) * f(b_interval);
 
         % pomocné hodnoty pre druhu podmienku:
         % minimum druhej derivácie z nášho intervalu
@@ -1455,11 +1548,6 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         % druhá derivácia horného ohraničenia intervalu
         v1 = f2(b_interval);
 
-        % Tretia podmienka pre a_interval
-        test2 = f(a_interval) * u1;
-        % Tretia podmienka pre b_interval
-        test3 = f(b_interval) * v1;
-
         fprintf(EquationTxt, "\n%d. Interval: [%g, %g]\n", i, a_interval, b_interval);
 
         % Kontrola Fourierových podmienok (Ak sú splnené Furierove podmienky, vyberieme vhodné x0 na základe týchto podmienok)
@@ -1467,10 +1555,10 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         % V prípade ak prvá podmienka vráti záporné číslo, druhá podmienka
         % vráti väčšie číslo ako nula, a znamienko sa nezmenilo na
         % intervalu s druhou deriváciou (druhé derivácie s max a min majú rovnaké znamienko)
-        if test1 < 0 && test2 > 0 && sign(f2(min_val)) == sign(f2(max_val))
+        if f(a_interval) * f(b_interval) < 0 && f(a_interval) * u1 > 0 && sign(f2(min_val)) == sign(f2(max_val))
             % tak naša x0 bude doľné ohraničenie
             x0 = a_interval;
-        elseif test1 < 0 && test3 > 0 && sign(f2(min_val)) == sign(f2(max_val))
+        elseif f(a_interval) * f(b_interval) < 0 && f(b_interval) * v1 > 0 && sign(f2(min_val)) == sign(f2(max_val))
             % v prípade ak prvá podmienka vráti záporné číslo a tretia
             % kladné číslo, a takisto sa nezmenilo znamienko na intervale s
             % druhou deriváciou tak naša x0 buďe horné ohraničenie
@@ -1493,6 +1581,9 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         % Inicializácia podmienky zastavenia
         Stop = f(x0-epsilon)*f(x0+epsilon);
         % Spustenie Newtonovej metódy (beží to pokiaľ podmienka vráti väčšie číslo ako 0)
+
+        % začiatok merania času
+        tic;
         while (Stop > 0)
             % Aktuálna hodnota x
             xk = x0;
@@ -1512,6 +1603,10 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
             % Nastavenie nového x0
             x0 = xkk;
         end
+        % koniec merania času
+        endTime = toc;
+        % zaznamenáme čas Newtonovej metódy
+        timeOfNewtonMethod = timeOfNewtonMethod + endTime;
 
         % Informujeme používateľa o tom, že sme našli koreň
         disp([newline, 'Našiel som koreň Newtonovou metódou na ', num2str(k), '. iteráciu']);
@@ -1597,9 +1692,6 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         % Zapíšeme odhad chyby Newtonovej metódy do súboru
         fprintf(EquationTxt, 'Odhad absolútnej chyby pre Newtonovu metódu je ER = %s.\n', errorEstimateStr);
     end
-
-    % zaznamenáme čas po newtonovej metóde a uložíme to do premennej timeOfNewtonMethod
-    timeOfNewtonMethod = toc;
 
     % Vypíšeme čas newtonovej metódy používateľovi a zapíšeme to aj do súboru
     disp([newline, 'Čas newtonovej metódy: ', num2str(timeOfNewtonMethod), 'sekúnd.', newline]);
@@ -2026,7 +2118,7 @@ function integralValue = performSimpsonMethodAndSaveEveryStepAndResultIntoFile(f
 
     % Vypočítame hodnotu určitého integrálu pomocou vzorca Simpsonovej metódy
     % (h / 3) * (f(lowerBound) + f(upperBound) + 4 * odd + 2 * even)
-    integralValue = (h / 3) * (f(lowerBound) + f(upperBound) + 4 * odd + 2 * even);
+    integralValue = abs((h / 3) * (f(lowerBound) + f(upperBound) + 4 * odd + 2 * even));
 
     % Zapíšeme do súboru Integral.txt informácie o výpočte vzorca Simpsonovej metódy
     fprintf(integralTxt, "\nVýpočet vzorca Simpsonovej metódy:\n");
@@ -2087,7 +2179,7 @@ function integralValue = performSimpsonMethodAndSaveEveryStepAndResultIntoFile(f
     pause(1);
 
     % Odhad chyby určitého integrálu pomocou vzorca ((b - a) / 180) * h^4 * max(f^(4)(x))
-    errorEstimateIntegral = ((upperBound - lowerBound) / 180) * h.^4 * maximum;
+    errorEstimateIntegral = abs(((upperBound - lowerBound) / 180) * h.^4 * maximum);
     errorEstimateIntegralString = sprintf('%.9f', errorEstimateIntegral);
 
     disp(['Odhad chyby určitého integrálu pomocou vzorca ((b - a) / 180) * h^4 * max(f^(4)(x)) = (', num2str(upperBound), ' - ', num2str(lowerBound), ') / 180) * ', num2str(h), '^4 * ', num2str(maximum), ' = ', errorEstimateIntegralString, newline]);
@@ -2891,15 +2983,15 @@ function results = performLagrangeInterpolationAndSaveResultsIntoFile(xValues, y
 
     % zapis koeficientov Lagrangeovho polynómu
     for i = 1:length(LagrangePolynomial)
-        % ak je koeficient rovný nule, tak ho zapiseme ako nulu, 
-        % lebo funkcia rats() by ho vypísala ako *
-        if LagrangePolynomial(i) == 0
-            fprintf(AproximationTxt, '0 ');
-            continue;
-        else
-            % pomocou rats zobrazíme čísla v racionalnom formáte
-            coefStr = rats(LagrangePolynomial(i));
-        end
+        % zaokrúhlime koeficient na maximálne 4 desatinné miesta
+        % pretože funkcia rats() nevie zobrazovať čísla s veľkým počtom desatinných miest
+        % uložíme zaokrúhlený koeficient do premennej truncatedCoef
+        truncatedCoef = round(LagrangePolynomial(i) * 1e4) / 1e4;
+        
+        % pomocou funkcie rats() zobrazíme čísla v racionalnom formáte
+        % uložíme koeficient do premennej coefStr
+        coefStr = rats(truncatedCoef);
+        
         % vypíšeme koeficient do súboru Aproximacia.txt
         fprintf(AproximationTxt, '%s ', coefStr);
     end
