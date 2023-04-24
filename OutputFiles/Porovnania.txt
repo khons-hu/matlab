@@ -13,54 +13,54 @@ Rovnica: 1 * x^3 + 0 * x^2 + -2 * x + 1
 -------------------------------------------------
  Porovnanie krokov bisekcií a newtonovej metódy
 -------------------------------------------------
-Počet krokov bisekcií: 7
-Počet krokov newtonovej metódy: 3
+Počet krokov bisekcií: 12
+Počet krokov newtonovej metódy: 8
 Newtonova metóda potrebovala menej krokov ako bisekcia o 4 krokov.
 
 
 -------------------------------------------------
  Porovnanie času bisekcií a newtonovej metódy
 -------------------------------------------------
-Čas bisekcií: 0.007925 sekúnd
-Čas newtonovej metódy: 0.001365 sekúnd
-Newtonova metóda potrebovala menej času ako bisekcia o 0.006560 sekúnd.
+Čas bisekcií: 0.003832 sekúnd
+Čas newtonovej metódy: 0.006166 sekúnd
+Bisekcia potrebovala menej času ako newtonova metóda o 0.002333 sekúnd.
 
 
 -----------------------------------------------------------
  Porovnanie chybových odhadov bisekcií a newtonovej metódy
 -----------------------------------------------------------
-Chybový odhad bisekcií pre 1. koreň: 0.006250
-Chybový odhad bisekcií pre 2. koreň: 0.025000
-Chybový odhad bisekcií pre 3. koreň: 0.006250
-Chybový odhad newtonovej metódy pre 1. koreň: 0.002128
-Chybový odhad newtonovej metódy pre 2. koreň: 0.005538
-Chybový odhad newtonovej metódy pre 3. koreň: 0.008524
+Chybový odhad bisekcií pre 1. koreň: 0.007812
+Chybový odhad bisekcií pre 2. koreň: 0.006250
+Chybový odhad bisekcií pre 3. koreň: 0.050000
+Chybový odhad newtonovej metódy pre 1. koreň: 0.001584
+Chybový odhad newtonovej metódy pre 2. koreň: 0.001037
+Chybový odhad newtonovej metódy pre 3. koreň: 0.002440
 
 
-Chybový odhad newtonovej metódy pre 1. koreň je menší ako chybový odhad bisekcií o 0.004122.
+Chybový odhad newtonovej metódy pre 1. koreň je menší ako chybový odhad bisekcií o 0.006229.
 
-Chybový odhad newtonovej metódy pre 2. koreň je menší ako chybový odhad bisekcií o 0.019462.
+Chybový odhad newtonovej metódy pre 2. koreň je menší ako chybový odhad bisekcií o 0.005213.
 
-Chybový odhad bisekcií pre 3. koreň je menší ako chybový odhad newtonovej metódy o 0.002274.
+Chybový odhad newtonovej metódy pre 3. koreň je menší ako chybový odhad bisekcií o 0.047560.
 
 
 
 -----------------------------------------------------------
  Porovnanie odhadnutých koreňov bisekcií a newtonovej metódy
 -----------------------------------------------------------
-Odhadnutý koreň bisekcií pre 1. koreň: -1.630534
-Odhadnutý koreň bisekcií pre 2. koreň: 0.618034
-Odhadnutý koreň bisekcií pre 3. koreň: 0.987500
-Odhadnutý koreň newtonovej metódy pre 1. koreň: -1.619985
-Odhadnutý koreň newtonovej metódy pre 2. koreň: 0.613785
-Odhadnutý koreň newtonovej metódy pre 3. koreň: 1.005927
+Odhadnutý koreň bisekcií pre 1. koreň: -1.609375
+Odhadnutý koreň bisekcií pre 2. koreň: 0.612500
+Odhadnutý koreň bisekcií pre 3. koreň: 1.000000
+Odhadnutý koreň newtonovej metódy pre 1. koreň: -1.618305
+Odhadnutý koreň newtonovej metódy pre 2. koreň: 0.617391
+Odhadnutý koreň newtonovej metódy pre 3. koreň: 1.001047
 
 
-Odhadnutý koreň bisekcií pre 1. koreň je menší ako odhadnutý koreň newtonovej metódy o 0.010549.
+Odhadnutý koreň newtonovej metódy pre 1. koreň je menší ako odhadnutý koreň bisekcií o 0.008930.
 
-Odhadnutý koreň newtonovej metódy pre 2. koreň je menší ako odhadnutý koreň bisekcií o 0.004249.
+Odhadnutý koreň bisekcií pre 2. koreň je menší ako odhadnutý koreň newtonovej metódy o 0.004891.
 
-Odhadnutý koreň bisekcií pre 3. koreň je menší ako odhadnutý koreň newtonovej metódy o 0.018427.
+Odhadnutý koreň bisekcií pre 3. koreň je menší ako odhadnutý koreň newtonovej metódy o 0.001047.
 
 
 ########################################################
@@ -77,17 +77,17 @@ Rovnica: 1 * x^3 + 1 * x^2 + -3 * x + -2
 -------------------------------------------------
  Porovnanie krokov bisekcií a newtonovej metódy
 -------------------------------------------------
-Počet krokov bisekcií: 8
-Počet krokov newtonovej metódy: 5
-Newtonova metóda potrebovala menej krokov ako bisekcia o 3 krokov.
+Počet krokov bisekcií: 11
+Počet krokov newtonovej metódy: 6
+Newtonova metóda potrebovala menej krokov ako bisekcia o 5 krokov.
 
 
 -------------------------------------------------
  Porovnanie času bisekcií a newtonovej metódy
 -------------------------------------------------
-Čas bisekcií: 0.010770 sekúnd
-Čas newtonovej metódy: 0.004644 sekúnd
-Newtonova metóda potrebovala menej času ako bisekcia o 0.006126 sekúnd.
+Čas bisekcií: 0.009475 sekúnd
+Čas newtonovej metódy: 0.005362 sekúnd
+Newtonova metóda potrebovala menej času ako bisekcia o 0.004112 sekúnd.
 
 
 -----------------------------------------------------------
@@ -95,17 +95,17 @@ Newtonova metóda potrebovala menej času ako bisekcia o 0.006126 sekúnd.
 -----------------------------------------------------------
 Chybový odhad bisekcií pre 1. koreň: 0.025000
 Chybový odhad bisekcií pre 2. koreň: 0.025000
-Chybový odhad bisekcií pre 3. koreň: 0.000781
+Chybový odhad bisekcií pre 3. koreň: 0.000098
 Chybový odhad newtonovej metódy pre 1. koreň: 0.000006
-Chybový odhad newtonovej metódy pre 2. koreň: 0.000614
+Chybový odhad newtonovej metódy pre 2. koreň: 0.000000
 Chybový odhad newtonovej metódy pre 3. koreň: 0.000002
 
 
 Chybový odhad newtonovej metódy pre 1. koreň je menší ako chybový odhad bisekcií o 0.024994.
 
-Chybový odhad newtonovej metódy pre 2. koreň je menší ako chybový odhad bisekcií o 0.024386.
+Chybový odhad newtonovej metódy pre 2. koreň je menší ako chybový odhad bisekcií o 0.025000.
 
-Chybový odhad newtonovej metódy pre 3. koreň je menší ako chybový odhad bisekcií o 0.000779.
+Chybový odhad newtonovej metódy pre 3. koreň je menší ako chybový odhad bisekcií o 0.000095.
 
 
 
@@ -114,17 +114,17 @@ Chybový odhad newtonovej metódy pre 3. koreň je menší ako chybový odhad bi
 -----------------------------------------------------------
 Odhadnutý koreň bisekcií pre 1. koreň: -2.000000
 Odhadnutý koreň bisekcií pre 2. koreň: -0.618034
-Odhadnutý koreň bisekcií pre 3. koreň: 1.616471
+Odhadnutý koreň bisekcií pre 3. koreň: 1.617839
 Odhadnutý koreň newtonovej metódy pre 1. koreň: -2.000005
-Odhadnutý koreň newtonovej metódy pre 2. koreň: -0.617439
+Odhadnutý koreň newtonovej metódy pre 2. koreň: -0.618034
 Odhadnutý koreň newtonovej metódy pre 3. koreň: 1.618036
 
 
 Odhadnutý koreň newtonovej metódy pre 1. koreň je menší ako odhadnutý koreň bisekcií o 0.000005.
 
-Odhadnutý koreň bisekcií pre 2. koreň je menší ako odhadnutý koreň newtonovej metódy o 0.000595.
+Odhadnutý koreň bisekcií pre 2. koreň je menší ako odhadnutý koreň newtonovej metódy o 0.000000.
 
-Odhadnutý koreň bisekcií pre 3. koreň je menší ako odhadnutý koreň newtonovej metódy o 0.001565.
+Odhadnutý koreň bisekcií pre 3. koreň je menší ako odhadnutý koreň newtonovej metódy o 0.000197.
 
 
 ########################################################
@@ -149,9 +149,9 @@ Newtonova metóda potrebovala menej krokov ako bisekcia o 13 krokov.
 -------------------------------------------------
  Porovnanie času bisekcií a newtonovej metódy
 -------------------------------------------------
-Čas bisekcií: 0.011037 sekúnd
-Čas newtonovej metódy: 0.005886 sekúnd
-Newtonova metóda potrebovala menej času ako bisekcia o 0.005151 sekúnd.
+Čas bisekcií: 0.006255 sekúnd
+Čas newtonovej metódy: 0.001566 sekúnd
+Newtonova metóda potrebovala menej času ako bisekcia o 0.004690 sekúnd.
 
 
 -----------------------------------------------------------
@@ -213,9 +213,9 @@ Newtonova metóda potrebovala menej krokov ako bisekcia o 3 krokov.
 -------------------------------------------------
  Porovnanie času bisekcií a newtonovej metódy
 -------------------------------------------------
-Čas bisekcií: 0.013938 sekúnd
-Čas newtonovej metódy: 0.003067 sekúnd
-Newtonova metóda potrebovala menej času ako bisekcia o 0.010872 sekúnd.
+Čas bisekcií: 0.005220 sekúnd
+Čas newtonovej metódy: 0.000289 sekúnd
+Newtonova metóda potrebovala menej času ako bisekcia o 0.004931 sekúnd.
 
 
 -----------------------------------------------------------
@@ -253,6 +253,54 @@ Rovnica: 2.5 * x^3 + 3 * x^2 + 4 * x + 5
 -------------------------------------------------
  Porovnanie krokov bisekcií a newtonovej metódy
 -------------------------------------------------
+Počet krokov bisekcií: 7
+Počet krokov newtonovej metódy: 3
+Newtonova metóda potrebovala menej krokov ako bisekcia o 4 krokov.
+
+
+-------------------------------------------------
+ Porovnanie času bisekcií a newtonovej metódy
+-------------------------------------------------
+Čas bisekcií: 0.005228 sekúnd
+Čas newtonovej metódy: 0.000653 sekúnd
+Newtonova metóda potrebovala menej času ako bisekcia o 0.004576 sekúnd.
+
+
+-----------------------------------------------------------
+ Porovnanie chybových odhadov bisekcií a newtonovej metódy
+-----------------------------------------------------------
+Chybový odhad bisekcií pre 1. koreň: 0.003906
+Chybový odhad newtonovej metódy pre 1. koreň: 0.002494
+
+
+Chybový odhad newtonovej metódy pre 1. koreň je menší ako chybový odhad bisekcií o 0.001412.
+
+
+
+-----------------------------------------------------------
+ Porovnanie odhadnutých koreňov bisekcií a newtonovej metódy
+-----------------------------------------------------------
+Odhadnutý koreň bisekcií pre 1. koreň: -1.226562
+Odhadnutý koreň newtonovej metódy pre 1. koreň: -1.227517
+
+
+Odhadnutý koreň newtonovej metódy pre 1. koreň je menší ako odhadnutý koreň bisekcií o 0.000954.
+
+
+########################################################
+###    Vstupný súbor Dataparametre.txt 6. riadok    ###
+########################################################
+
+Rovnica: 23 * x^3 + 3 * x^2 + 4 * x + 5
+
+-------------------------------------------------
+---  Porovnanie bisekcií a newtonovej metódy  ---
+-------------------------------------------------
+
+
+-------------------------------------------------
+ Porovnanie krokov bisekcií a newtonovej metódy
+-------------------------------------------------
 Počet krokov bisekcií: 4
 Počet krokov newtonovej metódy: 1
 Newtonova metóda potrebovala menej krokov ako bisekcia o 3 krokov.
@@ -261,37 +309,37 @@ Newtonova metóda potrebovala menej krokov ako bisekcia o 3 krokov.
 -------------------------------------------------
  Porovnanie času bisekcií a newtonovej metódy
 -------------------------------------------------
-Čas bisekcií: 0.018625 sekúnd
-Čas newtonovej metódy: 0.003807 sekúnd
-Newtonova metóda potrebovala menej času ako bisekcia o 0.014818 sekúnd.
+Čas bisekcií: 0.003453 sekúnd
+Čas newtonovej metódy: 0.000252 sekúnd
+Newtonova metóda potrebovala menej času ako bisekcia o 0.003201 sekúnd.
 
 
 -----------------------------------------------------------
  Porovnanie chybových odhadov bisekcií a newtonovej metódy
 -----------------------------------------------------------
 Chybový odhad bisekcií pre 1. koreň: 0.003125
-Chybový odhad newtonovej metódy pre 1. koreň: 0.002041
+Chybový odhad newtonovej metódy pre 1. koreň: 0.004422
 
 
-Chybový odhad newtonovej metódy pre 1. koreň je menší ako chybový odhad bisekcií o 0.001084.
+Chybový odhad bisekcií pre 1. koreň je menší ako chybový odhad newtonovej metódy o 0.001297.
 
 
 
 -----------------------------------------------------------
  Porovnanie odhadnutých koreňov bisekcií a newtonovej metódy
 -----------------------------------------------------------
-Odhadnutý koreň bisekcií pre 1. koreň: -1.219535
-Odhadnutý koreň newtonovej metódy pre 1. koreň: -1.227669
+Odhadnutý koreň bisekcií pre 1. koreň: -0.550678
+Odhadnutý koreň newtonovej metódy pre 1. koreň: -0.548142
 
 
-Odhadnutý koreň newtonovej metódy pre 1. koreň je menší ako odhadnutý koreň bisekcií o 0.008133.
+Odhadnutý koreň bisekcií pre 1. koreň je menší ako odhadnutý koreň newtonovej metódy o 0.002536.
 
 
 ########################################################
-###    Vstupný súbor Dataparametre.txt 6. riadok    ###
+###    Vstupný súbor Dataparametre.txt 7. riadok    ###
 ########################################################
 
-Rovnica: 23 * x^3 + 3 * x^2 + 4 * x + 5
+Rovnica: 12 * x^3 + 3 * x^2 + 4 * x + 5
 
 -------------------------------------------------
 ---  Porovnanie bisekcií a newtonovej metódy  ---
@@ -309,55 +357,7 @@ Newtonova metóda neiterovala, pretože sa nespĺňali Furierove podmienky, tak�
 -------------------------------------------------
  Porovnanie času bisekcií a newtonovej metódy
 -------------------------------------------------
-Čas bisekcií: 0.017735 sekúnd
-Newtonova metóda neiterovala, pretože sa nespĺňali Furierove podmienky.
-Bisekcia vyhrala, pretože newtonova metóda neiterovala.
-
-
------------------------------------------------------------
- Porovnanie chybových odhadov bisekcií a newtonovej metódy
------------------------------------------------------------
-Chybový odhad bisekcií pre 1. koreň: 0.003125
-Newtonova metóda neiterovala, pretože sa nespĺňali Furierove podmienky pre žiadny z koreňov.
-
-
-V prípade 1. koreňa newtonova metóda nespĺňala Furierove podmienky, takže jednoznačne Bisekcia vyhrala.
-
-
-
------------------------------------------------------------
- Porovnanie odhadnutých koreňov bisekcií a newtonovej metódy
------------------------------------------------------------
-Odhadnutý koreň bisekcií pre 1. koreň: -0.543750
-Newtonova metóda nespĺňala Furierove podmienky pre 1. koreň.
-
-
-V prípade 1. koreňa newtonova metóda nespĺňala Furierove podmienky, takže jednoznačne Bisekcia vyhrala.
-
-
-########################################################
-###    Vstupný súbor Dataparametre.txt 7. riadok    ###
-########################################################
-
-Rovnica: 12 * x^3 + 3 * x^2 + 4 * x + 5
-
--------------------------------------------------
----  Porovnanie bisekcií a newtonovej metódy  ---
--------------------------------------------------
-
-
--------------------------------------------------
- Porovnanie krokov bisekcií a newtonovej metódy
--------------------------------------------------
-Počet krokov bisekcií: 7
-Počet krokov newtonovej metódy: 0
-Newtonova metóda neiterovala, pretože sa nespĺňali Furierove podmienky, takže bisekcia vyhrala.
-
-
--------------------------------------------------
- Porovnanie času bisekcií a newtonovej metódy
--------------------------------------------------
-Čas bisekcií: 0.015377 sekúnd
+Čas bisekcií: 0.007524 sekúnd
 Newtonova metóda neiterovala, pretože sa nespĺňali Furierove podmienky.
 Bisekcia vyhrala, pretože newtonova metóda neiterovala.
 
@@ -405,9 +405,9 @@ Newtonova metóda potrebovala menej krokov ako bisekcia o 3 krokov.
 -------------------------------------------------
  Porovnanie času bisekcií a newtonovej metódy
 -------------------------------------------------
-Čas bisekcií: 0.014584 sekúnd
-Čas newtonovej metódy: 0.002757 sekúnd
-Newtonova metóda potrebovala menej času ako bisekcia o 0.011827 sekúnd.
+Čas bisekcií: 0.004942 sekúnd
+Čas newtonovej metódy: 0.000110 sekúnd
+Newtonova metóda potrebovala menej času ako bisekcia o 0.004832 sekúnd.
 
 
 -----------------------------------------------------------
@@ -453,9 +453,9 @@ Bisekcie a newtonova metóda boli vykonané rovnako rýchlo.
 -------------------------------------------------
  Porovnanie času bisekcií a newtonovej metódy
 -------------------------------------------------
-Čas bisekcií: 0.002379 sekúnd
-Čas newtonovej metódy: 0.002890 sekúnd
-Bisekcia potrebovala menej času ako newtonova metóda o 0.000511 sekúnd.
+Čas bisekcií: 0.001486 sekúnd
+Čas newtonovej metódy: 0.000833 sekúnd
+Newtonova metóda potrebovala menej času ako bisekcia o 0.000653 sekúnd.
 
 
 -----------------------------------------------------------
