@@ -63,6 +63,17 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         % Vykonáme bisekciu, kým sa nedosiahne naša presnosť * 2
         % teda zastavovacia podmienka je: abs(upperBisectionBound - lowerBisectionBound) >= (2 * epsilon)
         while (abs(upperBisectionBound - lowerBisectionBound) >= (2 * epsilon))
+
+            % Ak sme prekročili počet krokov 1000, tak vypíšeme chybové
+            % hlásenie a ukončíme súčasnú bisekciu
+            if iterator >= 1000
+                fprintf(EquationTxt, "     Bisekcia prekročila 1000 krokov, preto som pokračoval s ďalším intervalom\n");
+                disp("Bisekcia prekročila 1000 krokov, preto pokračujem s ďalším intervalom");
+                bisectionRootsVector = [bisectionRootsVector; NaN];
+                errorEstimateMatrix = [errorEstimateMatrix; NaN];
+                break;
+            end
+
             % vypočítame stred so spočítaním doľnej a hornej hranici a videlíme
             % to s 2 a uložíme to do premennej middle
             middle = (lowerBisectionBound + upperBisectionBound) / 2;
@@ -93,9 +104,9 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
                 % do súboru
                 if (iterator == 1)
                     fprintf(EquationTxt, "\n%d. krok\n", iterator);
-                    fprintf(EquationTxt, "Interval: [%g, %g]\n", lowerBisectionBound, upperBisectionBound);
-                    fprintf(EquationTxt, "Stred: %g\n", middle);
-                    fprintf(EquationTxt, "f(stred): %g\n", f(middle));
+                    fprintf(EquationTxt, "     Interval: [%g, %g]\n", lowerBisectionBound, upperBisectionBound);
+                    fprintf(EquationTxt, "     Stred: %g\n", middle);
+                    fprintf(EquationTxt, "     f(stred): %g\n", f(middle));
                 end
 
                 break;
@@ -114,9 +125,9 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
             end
 
             fprintf(EquationTxt, "\n%d. krok\n", iterator);
-            fprintf(EquationTxt, "Interval: [%g, %g]\n", lowerBisectionBound, upperBisectionBound);
-            fprintf(EquationTxt, "Stred: %g\n", middle);
-            fprintf(EquationTxt, "f(stred): %g\n", f(middle));
+            fprintf(EquationTxt, "     Interval: [%g, %g]\n", lowerBisectionBound, upperBisectionBound);
+            fprintf(EquationTxt, "     Stred: %g\n", middle);
+            fprintf(EquationTxt, "     f(stred): %g\n", f(middle));
         end
         % zaznamenáme čas po výpočte bisekcie pre daný interval
         endTime = toc;
@@ -135,12 +146,12 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         % vo forme riadkov počet krokov, doľná hranica, horná hranica, koreň,
         % veľkosť intervalu
         disp(['Výsledok bisekcie:', newline]);
-        disp(['Koreň: ', num2str(middle)]);
-        disp(['Funkčná hodnota pre koreň: ', num2str(f(middle))]);
-        disp(['Počet krokov: ', num2str(iterator)]);
-        disp(['Doľná hranica: ', num2str(lowerBisectionBound)]);
-        disp(['Horná hranica: ', num2str(upperBisectionBound)]);
-        disp(['Veľkosť intervalu: ', num2str(abs(upperBisectionBound - lowerBisectionBound)), newline]);
+        disp(['     Koreň: ', num2str(middle)]);
+        disp(['     Funkčná hodnota pre koreň: ', num2str(f(middle))]);
+        disp(['     Počet krokov: ', num2str(iterator)]);
+        disp(['     Doľná hranica: ', num2str(lowerBisectionBound)]);
+        disp(['     Horná hranica: ', num2str(upperBisectionBound)]);
+        disp(['     Veľkosť intervalu: ', num2str(abs(upperBisectionBound - lowerBisectionBound)), newline]);
 
         % odhad chyby (|b - a| / 2^(k + 1))
         % intervals(root, 3) je horné ohraničenie v matici intervals daného
@@ -162,7 +173,7 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         errorEstimateStr = sprintf(['%.', num2str(decimals), 'f'], errorEstimate);
 
         % vypíšeme odhadnutú chybu
-        disp(['Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = ', errorEstimateStr, newline]);
+        disp(['     Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = ', errorEstimateStr, newline]);
 
         % Zapíšeme príslušné informácie o vykonanej bisekcií pre konkrétny
         % koreň
@@ -172,19 +183,19 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         fprintf(EquationTxt, "--------------------");
 
         % konkrétny koreň ktorú sme našli
-        fprintf(EquationTxt, "\nKoreň: %.*g\n", decimals, middle);
+        fprintf(EquationTxt, "\n   Koreň: %.*g\n", decimals, middle);
         % funkčná hodnota pre koreň
-        fprintf(EquationTxt, "Funkčná hodnota pre koreň: %.*g\n", decimals, f(middle));
+        fprintf(EquationTxt, "     Funkčná hodnota pre koreň: %.*g\n", decimals, f(middle));
         % presnosť
-        fprintf(EquationTxt, "Epsilon (presnosť): %.*g\n", decimals, epsilon);
+        fprintf(EquationTxt, "     Epsilon (presnosť): %.*g\n", decimals, epsilon);
         % počet krokov bisekcii
-        fprintf(EquationTxt, "Počet krokov: %d\n", iterator);
+        fprintf(EquationTxt, "     Počet krokov: %d\n", iterator);
         % Interval, v ktorom bol nájdený koreň
-        fprintf(EquationTxt, "Interval, v ktorom bol najdený koreň: [%.*g, %.*g]\n", decimals, lowerBisectionBound, decimals, upperBisectionBound);
+        fprintf(EquationTxt, "     Interval, v ktorom bol najdený koreň: [%.*g, %.*g]\n", decimals, lowerBisectionBound, decimals, upperBisectionBound);
         % Velkosť intervalu
-        fprintf(EquationTxt, "Velkosť intervalu: %.*g\n", decimals, abs(upperBisectionBound - lowerBisectionBound));
+        fprintf(EquationTxt, "     Velkosť intervalu: %.*g\n", decimals, abs(upperBisectionBound - lowerBisectionBound));
         % Odhad chyby
-        fprintf(EquationTxt, "Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = %s\n", errorEstimateStr);
+        fprintf(EquationTxt, "     Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = %s\n", errorEstimateStr);
         fprintf(EquationTxt, "------------------------------------------------------------\n\n");
     end
 

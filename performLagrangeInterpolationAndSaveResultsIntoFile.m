@@ -30,7 +30,7 @@ function results = performLagrangeInterpolationAndSaveResultsIntoFile(xValues, y
 
     % Výpis do konzoly a do súboru Aproximacia.txt
     disp(['Počet bodov pre aproximáciu: ', num2str(numPoints), newline]);
-    fprintf(AproximationTxt, 'Počet bodov pre aproximáciu: %d\n', numPoints);
+    fprintf(AproximationTxt, 'Počet bodov pre aproximáciu: %d\n\n', numPoints);
 
     % pomocou funkcie pause() zastavíme program na 1 sekundu, aby sme mohli pozrieť si výsledky v konzole.
     pause(1);

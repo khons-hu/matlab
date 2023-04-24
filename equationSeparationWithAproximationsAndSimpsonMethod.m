@@ -217,7 +217,7 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % tak sa používateľovi zobrazí hláška, že epsilon je neplatná hodnota
                     % a opýtame sa ho, či chce epsilon zadať vy alebo či chce pokračovať ďalej
                     epsilon = -1;
-                    if ~isnan(DataParametersInputMatrix(iterator, 13)) && isreal(DataParametersInputMatrix(iterator, 13)) && DataParametersInputMatrix(iterator, 13) >= 0
+                    if ~isnan(DataParametersInputMatrix(iterator, 13)) && isreal(DataParametersInputMatrix(iterator, 13)) && DataParametersInputMatrix(iterator, 13) > 0
                         epsilon = getEpsilon(iterator, DataParametersInputMatrix);
                     else
                         disp(['V stlpci Epsilon v súbore Dataparametre.txt na riadku ', num2str(iterator), ' nie je zadaná hodnota epsilon alebo je zadaná zlá hodnota epsilon.']);
@@ -570,7 +570,7 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % integrácie, ak zvolí 1, tak zavoláme funkciu
                     % getEpsilonForIntegral, ktorá nám vráti hodnotu presnosti
                     % integrácie, ak zvolí niečo iné, tak preskočíme tento riadok
-                    if isnan(DataParametersInputMatrix(iterator, 13)) || ~isreal(DataParametersInputMatrix(iterator, 13)) || DataParametersInputMatrix(iterator, 13) < 0
+                    if isnan(DataParametersInputMatrix(iterator, 13)) || ~isreal(DataParametersInputMatrix(iterator, 13)) || DataParametersInputMatrix(iterator, 13) <= 0
                         disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' nie je správna hodnota presnosti integrácie.']);
                         disp('Chcete zadať hodnotu presnosti integrácie alebo pokračovať s ďalším riadkom? ');
                         userChoice = input('(zadajte 1 - zadať presnosť integrácie, zadajte hocičo iné ak chcete pokračovať s ďalším riadkom ): ', 's');
@@ -711,9 +711,9 @@ function epsilon = getEpsilonFromUser()
     epsilon = -1;
 
     % pokial epsilon je zaporny alebo epsilonHelp nie je realne cislo
-    while (~checkRealNumber(epsilonHelp) || epsilon < 0)
+    while (~checkRealNumber(epsilonHelp) || epsilon <= 0)
         % Opytame sa na epsilon od používateľa
-        epsilonHelp = input('Zadajte epsilon (presnosť, kladné číslo): ', 's');
+        epsilonHelp = input('Zadajte epsilon (presnosť, kladné nenulové číslo): ', 's');
         
         % Ak pomocná premenná je reálne číslo
         if (checkRealNumber(epsilonHelp))
@@ -722,8 +722,8 @@ function epsilon = getEpsilonFromUser()
             epsilon = str2double(epsilonHelp);
             % Ak epsilon je záporný, informujeme používateľa o tom, že
             % zadal neplatný vstup
-            if (epsilon < 0)
-                disp('Zadali ste záporne epsilon! Skúste znova!');
+            if (epsilon <= 0)
+                disp('Zadali ste neplatné epsilon! Skúste znova!');
             end
         else
             % ak pomocná premenná nie je reálne číslo, informujeme o
@@ -759,7 +759,7 @@ function epsilon = getEpsilon(iterator, DataParametersInputMatrix)
         epsilon = -1;
 
         % pokial epsilon je zaporny alebo epsilonHelp nie je realne cislo
-        while (~checkRealNumber(epsilonHelp) || epsilon < 0)
+        while (~checkRealNumber(epsilonHelp) || epsilon <= 0)
             % Opytame sa na epsilon od používateľa
             epsilonHelp = input('Zadajte epsilon (presnosť, kladné číslo): ', 's');
             
@@ -770,8 +770,8 @@ function epsilon = getEpsilon(iterator, DataParametersInputMatrix)
                 epsilon = str2double(epsilonHelp);
                 % Ak epsilon je záporný, informujeme používateľa o tom, že
                 % zadal neplatný vstup
-                if (epsilon < 0)
-                    disp('Zadali ste záporne epsilon! Skúste znova!');
+                if (epsilon <= 0)
+                    disp('Zadali ste neplatné epsilon! Skúste znova!');
                 end
             else
                 % ak pomocná premenná nie je reálne číslo, informujeme o
@@ -892,7 +892,7 @@ function askForSeparation(parameterA, parameterB, parameterC, parameterD, f)
         separateInput = input("ak nechcete, zadajte n, N, no, NO, nie, NIE: ", 's');
 
         % V prípade keď používateľ chce separovať
-        if (strcmpi(separateInput, 'y') || strcmpi(separateInput, 'yes') || strcmpi(separateInput, 'ano'))
+        if (strcmpi(separateInput, 'y') || strcmpi(separateInput, 'yes') || strcmpi(separateInput, 'ano') || strcmpi(separateInput, 'a'))
             % opýtame sa používateľa na dolné a horné ohraničenie
             [infOfSeparation, supOfSeparation] = getBounds();
             % zobrazíme dané funkcie
@@ -1194,9 +1194,9 @@ function epsilon = getEpsilonForIntegral()
     epsilon = -1;
 
     % vstup kontrolovať či je to reálne číslo a či to neni neplatný vstup (napríklad písmeno, špeciálny karakter, prázdny reťazec)
-    while (~checkRealNumber(helpEpsilon) || epsilon < 0)
+    while (~checkRealNumber(helpEpsilon) || epsilon <= 0)
         % Opýtame sa na vstup od používateľa
-        helpEpsilon = input('Zadajte epsilon (reálne číslo): ', 's');
+        helpEpsilon = input('Zadajte epsilon (reálne, kladné, nenulové číslo): ', 's');
         % V prípade, keď to je reálne číslo
         if (checkRealNumber(helpEpsilon))
             % Prekonvertujeme to číslo na double (desatinné číslo)

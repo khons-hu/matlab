@@ -96,7 +96,7 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         else
             % v prípade, ak neplatí Furierova podmienka tak informujeme
             % používateľa o tom
-            fprintf(EquationTxt, "\nInterval nesplňal Furierove podmienky, pokračoval som s ďalším koreňom, ak existovala \n");
+            fprintf(EquationTxt, "\n     Interval nesplňal Furierove podmienky, pokračoval som s ďalším koreňom, ak existovala \n");
             disp(['Interval <' num2str(a_interval) ', ' num2str(b_interval) '> nesplňal Furierove podmienky, pokračujem s ďalším koreňom, ak existuje']);
             errorEstimateMatrix = [errorEstimateMatrix, NaN];
             newtonRootsVector = [newtonRootsVector, NaN];
@@ -117,8 +117,22 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         % Spustenie Newtonovej metódy (beží to pokiaľ podmienka vráti väčšie číslo ako 0)
 
         % začiatok merania času
-        tic;
-        while (Stop > 0)
+        endTime = tic;
+        errTime = 0;
+        while (Stop > 0 || errorEstimate > epsilon)
+
+            % Limitujeme počet iterácií na 1000
+            if k >= 1000
+                % v prípade, ak sa počet iterácií prekročí 1000 tak
+                % informujeme používateľa o tom
+                fprintf(EquationTxt, "\n     Počet iterácií prekročil 1000, pokračujem s ďalším koreňom, ak existovala \n");
+                disp(['Počet iterácií prekročil 1000, pokračujem s ďalším koreňom, ak existuje!']);
+                errorEstimateMatrix = [errorEstimateMatrix, NaN];
+                newtonRootsVector = [newtonRootsVector, NaN];
+                % a pokračujeme s ďaľšími intervalmi
+                break;
+            end
+
             % Aktuálna hodnota x
             xk = x0;
 
@@ -137,14 +151,46 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
             % Nastavenie nového x0
             x0 = xkk;
 
-            fprintf(EquationTxt, "%d. krok\n", k);
-            fprintf(EquationTxt, "x%d = %g\n", k, x0);
-            fprintf(EquationTxt, "f(x%d) = %g\n", k, f(x0));
-            fprintf(EquationTxt, "f'(x%d) = %g\n", k, f1(x0));
-            fprintf(EquationTxt, "Stop = %g\n\n", Stop);
+            % čas pre veci ktore nie su sucastou algoritmu
+            errorTime = tic;
+
+            fprintf(EquationTxt, "     %d. krok\n", k);
+            fprintf(EquationTxt, "     x%d = %g\n", k, x0);
+            fprintf(EquationTxt, "     f(x%d) = %g\n", k, f(x0));
+            fprintf(EquationTxt, "     f'(x%d) = %g\n", k, f1(x0));
+            fprintf(EquationTxt, "     Zastavovacia podmienka = %g\n\n", Stop);
+
+            % Odhad chyby Newtonovej metódy
+            % pomocná premenná m na minimum absolutnej hodnoty prvej derivacie
+            % funkcie na našom intervale
+            m = 0; 
+            % pomocná premenná M na minimum absolutnej hodnoty druhej derivacie
+            % opačnej funkcie na našom intervale
+            M = 0;
+
+            % Dff1m je prvá derivácia opačnej funkcie
+            Dff1m(x) = diff((-1) * ff(x));
+
+            % Prevedieme Dff1m na funkciu vhodnú pre Matlab
+            expresion = formula(Dff1m);
+            f1m = matlabFunction(expresion);
+
+            % Nájdeme minimum absolútnej hodnoty prvej derivácie funkcie na danom intervale
+            m = fminbnd(f1, a_interval, b_interval);
+
+            % Nájdeme minimum absolútnej hodnoty druhej derivácie opačnej funkcie na danom intervale
+            M = fminbnd(f1m, a_interval, b_interval);
+
+            % Nájdeme menšiu z hodnôt absolútnych hodnôt prvej derivácie funkcie a druhej derivácie opačnej funkcie
+            m1 = min(abs(f1(m)), abs(f1(M)));
+
+            % Odhad chyby Newtonovej metódy
+            errorEstimate = abs(newtonOutputMatrix(end, 4)) / m1;
+
+            errTime = errTime + toc(errorTime);
         end
         % koniec merania času
-        endTime = toc;
+        endTime = toc(endTime) - errTime;
         % zaznamenáme čas Newtonovej metódy
         timeOfNewtonMethod = timeOfNewtonMethod + endTime;
 
@@ -205,13 +251,13 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         % vo forme riadkov počet krokov, doľná hranica, horná hranica, koreň,
         % hodnota zastavenia
         disp(['Výsledok Newtonovej metódy:', newline]);
-        disp(['Koreň: ', num2str(x0)]);
-        disp(['Funkčná hodnota pre koreň: ', num2str(f(x0))]);
-        disp(['Počet krokov: ', num2str(k)]);
-        disp(['Doľná hranica: ', num2str(a_interval)]);
-        disp(['Horná hranica: ', num2str(b_interval)]);
-        disp(['Hodnota zastavenia: ', stopStr, newline]);
-        disp(['Odhad absolútnej chyby pre Newtonovu metódu je ER = ', errorEstimateStr, '.']);
+        disp(['     Koreň: ', num2str(x0)]);
+        disp(['     Funkčná hodnota pre koreň: ', num2str(f(x0))]);
+        disp(['     Počet krokov: ', num2str(k)]);
+        disp(['     Doľná hranica: ', num2str(a_interval)]);
+        disp(['     Horná hranica: ', num2str(b_interval)]);
+        disp(['     Hodnota zastavenia: ', stopStr, newline]);
+        disp(['     Odhad absolútnej chyby pre Newtonovu metódu je ER = ', errorEstimateStr, '.']);
 
         % Zapíšeme príslušné informácie o vykonanej Newtonovej metóde pre konkrétny
 
@@ -220,26 +266,26 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         fprintf(EquationTxt, '---------------------------\n');
 
         % konkrétny koreň ktorý sme našli
-        fprintf(EquationTxt, "\nKoreň: %.*g\n", decimals, x0);
+        fprintf(EquationTxt, "\n   Koreň: %.*g\n", decimals, x0);
         % funkčná hodnota pre koreň
-        fprintf(EquationTxt, "Funkčná hodnota pre koreň: %.*g\n", decimals, f(x0));
+        fprintf(EquationTxt, "     Funkčná hodnota pre koreň: %.*g\n", decimals, f(x0));
         % epsilon
-        fprintf(EquationTxt, "epsilon: %.*g\n", decimals, epsilon);
+        fprintf(EquationTxt, "     epsilon: %.*g\n", decimals, epsilon);
         % počet krokov
-        fprintf(EquationTxt, 'Počet krokov: %d\n', k);
+        fprintf(EquationTxt, '     Počet krokov: %d\n', k);
         % interval
-        fprintf(EquationTxt, 'Interval, v ktorom bol nájdený koreň: [%.*g, %.*g]\n', decimals, a_interval, decimals, b_interval);
+        fprintf(EquationTxt, '     Interval, v ktorom bol nájdený koreň: [%.*g, %.*g]\n', decimals, a_interval, decimals, b_interval);
         % veľkosť intervalu
-        fprintf(EquationTxt, "Velkosť intervalu: %.*g\n", decimals, abs(b_interval - a_interval));
+        fprintf(EquationTxt, "     Velkosť intervalu: %.*g\n", decimals, abs(b_interval - a_interval));
         % hodnota zastavenia
-        fprintf(EquationTxt, 'Hodnota zastavenia: %s\n', stopStr);
+        fprintf(EquationTxt, '     Hodnota zastavenia: %s\n', stopStr);
         % Zapíšeme odhad chyby Newtonovej metódy do súboru
-        fprintf(EquationTxt, 'Odhad absolútnej chyby pre Newtonovu metódu je ER = %s.\n', errorEstimateStr);
+        fprintf(EquationTxt, '     Odhad absolútnej chyby pre Newtonovu metódu je ER = %s.\n', errorEstimateStr);
     end
 
     % Vypíšeme čas newtonovej metódy používateľovi a zapíšeme to aj do súboru
-    disp([newline, 'Čas newtonovej metódy: ', num2str(timeOfNewtonMethod), 'sekúnd.', newline]);
-    fprintf(EquationTxt, '\nČas newtonovej metódy: %f sekúnd\n', timeOfNewtonMethod);
+    disp([newline, '     Čas newtonovej metódy: ', num2str(timeOfNewtonMethod), 'sekúnd.', newline]);
+    fprintf(EquationTxt, '\n     Čas newtonovej metódy: %f sekúnd\n', timeOfNewtonMethod);
 
     fprintf(EquationTxt, "<------------------------------------------>\n\n");
     
