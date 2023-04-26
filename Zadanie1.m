@@ -1,4 +1,4 @@
-% Príkaz "clc" (skratka pre "clear screen") vymaže konzolu Matlabu a presunie kurzor na začiatok stránky. 
+% Príkaz "clc" (skratka pre "clear console") vymaže konzolu Matlabu a presunie kurzor na začiatok stránky. 
 % Je to užitočné, ak chcete mať čistý výstup v konzole.
 clc;
 

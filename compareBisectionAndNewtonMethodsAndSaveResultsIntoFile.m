@@ -100,14 +100,14 @@ function compareBisectionAndNewtonMethodsAndSaveResultsIntoFile(bisectionOutputM
     for i = 1 : size(errorEstimateBisectionMatrix, 2)
         % ak odhad pre newtonovu metódu je NaN tak ho nebudeme porovnávať
         if isnan(errorEstimateNewtonMethodMatrix(i))
-            fprintf(ComparationTxt, "V prípade %d. koreňa newtonova metóda nespĺňala Furierove podmienky, takže jednoznačne Bisekcia vyhrala.\n\n", i);
+            fprintf(ComparationTxt, "V prípade %d. koreňa newtonova metóda nespĺňala Furierove podmienky, takže jednoznačne Bisekcia vyhrala.\n", i);
             continue;
         end
 
         if errorEstimateBisectionMatrix(i) < errorEstimateNewtonMethodMatrix(i)
-            fprintf(ComparationTxt, "Chybový odhad bisekcií pre %d. koreň je menší ako chybový odhad newtonovej metódy o %f.\n\n", i, errorEstimateNewtonMethodMatrix(i) - errorEstimateBisectionMatrix(i));
+            fprintf(ComparationTxt, "Chybový odhad bisekcií pre %d. koreň je menší ako chybový odhad newtonovej metódy o %f.\n", i, errorEstimateNewtonMethodMatrix(i) - errorEstimateBisectionMatrix(i));
         elseif errorEstimateBisectionMatrix(i) > errorEstimateNewtonMethodMatrix(i)
-            fprintf(ComparationTxt, "Chybový odhad newtonovej metódy pre %d. koreň je menší ako chybový odhad bisekcií o %f.\n\n", i, errorEstimateBisectionMatrix(i) - errorEstimateNewtonMethodMatrix(i));
+            fprintf(ComparationTxt, "Chybový odhad newtonovej metódy pre %d. koreň je menší ako chybový odhad bisekcií o %f.\n", i, errorEstimateBisectionMatrix(i) - errorEstimateNewtonMethodMatrix(i));
         else
             fprintf(ComparationTxt, "Chybové odhady bisekcií a newtonovej metódy pre %d. koreň sú rovnaké.\n\n", i);
         end
@@ -137,16 +137,16 @@ function compareBisectionAndNewtonMethodsAndSaveResultsIntoFile(bisectionOutputM
     % Porovnáme odhadnuté korene bisekcií a newtonovej metódy a vypíšeme do súboru Porovnania.txt
     for i = 1 : size(bisectionRootsVector, 2)
         if isnan(newtonRootsVector(i))
-            fprintf(ComparationTxt, "V prípade %d. koreňa newtonova metóda nespĺňala Furierove podmienky, takže jednoznačne Bisekcia vyhrala.\n\n", i);
+            fprintf(ComparationTxt, "V prípade %d. koreňa newtonova metóda nespĺňala Furierove podmienky, takže jednoznačne Bisekcia vyhrala.\n", i);
             continue;
         end
 
         if bisectionRootsVector(i) < newtonRootsVector(i)
-            fprintf(ComparationTxt, "Odhadnutý koreň bisekcií pre %d. koreň je menší ako odhadnutý koreň newtonovej metódy o %f.\n\n", i, abs(newtonRootsVector(i) - bisectionRootsVector(i)));
+            fprintf(ComparationTxt, "Odhadnutý koreň bisekcií pre %d. koreň je menší ako odhadnutý koreň newtonovej metódy o %f.\n", i, abs(newtonRootsVector(i) - bisectionRootsVector(i)));
         elseif bisectionRootsVector(i) > newtonRootsVector(i)
-            fprintf(ComparationTxt, "Odhadnutý koreň newtonovej metódy pre %d. koreň je menší ako odhadnutý koreň bisekcií o %f.\n\n", i, abs(bisectionRootsVector(i) - newtonRootsVector(i)));
+            fprintf(ComparationTxt, "Odhadnutý koreň newtonovej metódy pre %d. koreň je menší ako odhadnutý koreň bisekcií o %f.\n", i, abs(bisectionRootsVector(i) - newtonRootsVector(i)));
         else
-            fprintf(ComparationTxt, "Odhadnuté korene bisekcií a newtonovej metódy pre %d. koreň sú rovnaké.\n\n", i);
+            fprintf(ComparationTxt, "Odhadnuté korene bisekcií a newtonovej metódy pre %d. koreň sú rovnaké.\n", i);
         end
     end
 

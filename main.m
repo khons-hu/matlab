@@ -6,6 +6,16 @@
 % tie 2 hlavné funkcie sú equationSeparationWithAproximationsAndSimpsonMethod a lagrangeInterpolationAndLeastSquaresMethod
 function main()
 
+    % v prípade, ak adresár InputFiles neexistuje, tak sa vytvorí
+    if ~exist('InputFiles', 'dir')
+        mkdir('InputFiles');
+    end
+
+    % v prípade, ak adresár OutputFiles neexistuje, tak sa vytvorí
+    if ~exist('OutputFiles', 'dir')
+        mkdir('OutputFiles');
+    end
+
     % Iniciálne premazanie súborov v priečinku OutputFiles
     % Ak by sa v nich nachádzali nejaké dáta pred spustením programu, tak sa vymažú
     % (v mode 'w' sa otvorí/vytvori súbor na zápis, pomocou fclose obsah súboru sa premaže (kvôli mode w) a súbor sa zavrie)
@@ -76,7 +86,7 @@ function main()
                 % Spustenie úlohy 1
                 equationSeparationWithAproximationsAndSimpsonMethod();
                 % Výpis, že úloha bola úspešne dokončená
-                disp('Úloha 1 bola úspešne dokončená.');
+                disp('Úloha 1 bola úspešne dokončená, všetky výsledky sú uložené v súboroch v priečinku OutputFiles.');
                 % Výpis, že sa pokračuje s úlohou 2
                 inputForSecondTask = input('Zadajte hocičo alebo stlačte enter pre pokračovanie s úlohou 2: ', 's');
                 disp('Teraz budete pokračovať s úlohou 2.');
@@ -88,7 +98,7 @@ function main()
                 % Spustenie úlohy 2     
                 lagrangeInterpolationAndLeastSquaresMethod();
                 % Výpis, že úloha bola úspešne dokončená
-                disp('Úloha 2 bola úspešne dokončená.');
+                disp('Úloha 2 bola úspešne dokončená, všetky výsledky sú uložené v súboroch v priečinku OutputFiles.');
                 % Výpis, že sa pokračuje s úlohou 1
                 inputForFirstTask = input('Zadajte hocičo alebo stlačte enter pre pokračovanie s úlohou 1: ', 's');
                 disp('Teraz budete pokračovať s úlohou 1.');

@@ -115,19 +115,6 @@ function intervals = getIntervalsAndSaveThemIntoFile(f, rootsCount, a, b, c, d)
                 end
 
                 valid_interval = true; % nastavíme validitu intervalu na true
-                % skontrolujeme, či nový interval sa neprekrýva s už existujúcimi intervalmi
-
-                for j = 1:(i - 1)
-                    if (intervals(j,2) <= sup && intervals(j,3) >= sup) || (intervals(j,2) <= inf && intervals(j,3) >= inf)
-                        valid_interval = false;
-                        disp("Zadaný interval sa prekrýva s už existujúcim intervalom.");
-                        badIntervalsCount = badIntervalsCount + 1;
-                        if badIntervalsCount >= 3
-                            disp('Zadali ste aspoň 3krát neplatný interval, tak sa automaticky vygenerujú intervaly pre korene!');
-                        end
-                        break;
-                    end
-                end
 
                 if badIntervalsCount >= 3
                     break;
@@ -213,19 +200,6 @@ function intervals = generateIntervals(rootsCount, a, b, c, d, f)
         while f(inf) * f(sup) >= 0
             inf = inf - 0.05;
             sup = sup + 0.05;
-        end
-        
-        % Skontrolujeme, či sa nový interval neprekrýva s predchádzajúcimi
-        for j = 1:i-1
-            % Ak sa prekrýva, posunieme hornú hranicu nového intervalu
-            while intervals(j, 2) <= sup && intervals(j, 3) >= inf
-                % Posunieme hornú hranicu nového intervalu
-                sup = sup + 0.05;
-                % Ak je potrebné, posunieme aj dolnú hranicu nového intervalu
-                if f(inf) * f(sup) >= 0
-                    inf = inf - 0.05;
-                end
-            end
         end
         
         % Uložíme nájdený interval do matice 'intervals'

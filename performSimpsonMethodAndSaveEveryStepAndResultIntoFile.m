@@ -37,6 +37,9 @@ function integralValue = performSimpsonMethodAndSaveEveryStepAndResultIntoFile(f
     % pomocou funkcie fminbnd() zistíme najväčšiu hodnotu štvrtej derivácie na danom intervale
     maximum = fminbnd(maxFunctionValueDescriptor, lowerBound, upperBound);
 
+    % funkčná hodnota štvrtej derivácie v bode maximum
+    maximum = maxFunctionValueDescriptor(maximum);
+
     % zapíšeme do súboru Integral.txt najväčšiu hodnotu štvrtej derivácie na danom intervale
     fprintf(integralTxt, "Najväčšia hodnota štvrtej derivácie na danom intervale je: %f\n", maximum);
     % vypíšeme do konzoly najväčšiu hodnotu štvrtej derivácie na danom intervale

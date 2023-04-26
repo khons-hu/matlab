@@ -568,8 +568,8 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
 
                     % v prípade ak je horná hranica integrácie rovná dolnej, tak
                     % vypíšeme chybové hlásenie a preskočíme tento riadok
-                    if lowerBound == upperBound
-                        disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' je horná hranica integrácie rovná dolnej. Preto sa integrácia nevykoná, pokračujeme s ďalším riadkom, ak existuje.']);
+                    if lowerBound == upperBound && (lowerBound ~= 0 && upperBound ~= 0)
+                        disp(['V súbore DataParametre.txt na riadku ', num2str(iterator), ' je horná hranica integrácie rovná dolnej a nie sú obe nulové. Preto sa integrácia nevykoná, pokračujeme s ďalším riadkom, ak existuje.']);
                         continue;
                     end
 
@@ -607,6 +607,16 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                     % Vypíšeme informácie o integráli používateľovi
                     displayIntegral(parameterA, parameterB, parameterC, parameterK, parameterQ, parameterR, parameterS, lowerBound, upperBound, epsilon);
                     % pomocou funkcie pause() zastavíme program na 1 sekundu, aby sme mohli pozrieť si výsledky v konzole.
+
+                    % Kontrola spojitosti
+                    % ak -(q/k) alebo -(s/r) su v intervale, integral nie je spojita
+                    if (parameterK ~= 0 && parameterR ~= 0)
+                        if (-(parameterQ/parameterK) <= upperBound && -(parameterQ/parameterK) >= lowerBound) || (-(parameterS/parameterR) <= upperBound && -(parameterS/parameterR) >= lowerBound)
+                            disp('Náš integrál nie je spojitý, pokračujem s ďalším riadkom, ak existuje.');
+                            continue;
+                        end
+                    end
+
                     pause(1);
                     % vypočítame hodnotu určitého integrálu pomocou simpsonovej metódy
                     % a uložíme ju do premennej integralValue, takisto uložíme

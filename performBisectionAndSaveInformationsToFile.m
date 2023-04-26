@@ -47,6 +47,9 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         % horná hranica bude z daného riadku kde sa nachádzame tretí stlpec
         upperBisectionBound = intervals(root, 3);
 
+        % odhad chyby
+        errorEstimate = abs(upperBisectionBound - lowerBisectionBound) / 2;
+
         % premenná middle, kďe budeme ukladať stred a po vykonaní bisekcie to
         % bude náš nájdený koreň funkcie pomocou bisekcie
         middle = (lowerBisectionBound + upperBisectionBound) / 2;
@@ -58,11 +61,17 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         fprintf(EquationTxt, "Jednotlivé kroky bisekcie:\n");
         fprintf(EquationTxt, "--------------------------");
 
+        fprintf(EquationTxt, "\n%d. krok\n", iterator);
+        fprintf(EquationTxt, "     Interval: [%g, %g]\n", lowerBisectionBound, upperBisectionBound);
+        fprintf(EquationTxt, "     Stred: %g\n", middle);
+        fprintf(EquationTxt, "     f(stred): %g\n", f(middle));
+        fprintf(EquationTxt, "     Odhadnutá chyba: %g\n", errorEstimate);
+
         % zaznamenáme čas pred výpočtom bisekcie pre daný interval
         tic;
         % Vykonáme bisekciu, kým sa nedosiahne naša presnosť * 2
         % teda zastavovacia podmienka je: abs(upperBisectionBound - lowerBisectionBound) >= (2 * epsilon)
-        while (abs(upperBisectionBound - lowerBisectionBound) >= (2 * epsilon))
+        while (abs(upperBisectionBound - lowerBisectionBound) >= (2 * epsilon) || errorEstimate > epsilon)
 
             % Ak sme prekročili počet krokov 1000, tak vypíšeme chybové
             % hlásenie a ukončíme súčasnú bisekciu
@@ -73,10 +82,6 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
                 errorEstimateMatrix = [errorEstimateMatrix; NaN];
                 break;
             end
-
-            % vypočítame stred so spočítaním doľnej a hornej hranici a videlíme
-            % to s 2 a uložíme to do premennej middle
-            middle = (lowerBisectionBound + upperBisectionBound) / 2;
 
             % zvýšime počet krokov o 1 (jeden)
             iterator = iterator + 1;
@@ -107,6 +112,7 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
                     fprintf(EquationTxt, "     Interval: [%g, %g]\n", lowerBisectionBound, upperBisectionBound);
                     fprintf(EquationTxt, "     Stred: %g\n", middle);
                     fprintf(EquationTxt, "     f(stred): %g\n", f(middle));
+                    fprintf(EquationTxt, "     Odhadnutá chyba: %g\n", errorEstimate);
                 end
 
                 break;
@@ -124,10 +130,18 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
                 lowerBisectionBound = middle;
             end
 
+            % odhad chyby
+            errorEstimate = abs(upperBisectionBound - lowerBisectionBound) / 2;
+
+            % vypočítame stred so spočítaním doľnej a hornej hranici a videlíme
+            % to s 2 a uložíme to do premennej middle
+            middle = (lowerBisectionBound + upperBisectionBound) / 2;
+
             fprintf(EquationTxt, "\n%d. krok\n", iterator);
             fprintf(EquationTxt, "     Interval: [%g, %g]\n", lowerBisectionBound, upperBisectionBound);
             fprintf(EquationTxt, "     Stred: %g\n", middle);
             fprintf(EquationTxt, "     f(stred): %g\n", f(middle));
+            fprintf(EquationTxt, "     Odhadnutá chyba: %g\n", errorEstimate);
         end
         % zaznamenáme čas po výpočte bisekcie pre daný interval
         endTime = toc;
@@ -157,7 +171,7 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         % intervals(root, 3) je horné ohraničenie v matici intervals daného
         % intervalu, intervals(root, 2) je dolné ohraničenie v matici intervals daného
         % intervalu
-        errorEstimate = abs(intervals(root, 3) - intervals(root, 2)) / (2.^(iterator + 1));
+        errorEstimate = abs(upperBisectionBound - lowerBisectionBound) / 2;
 
         errorEstimateMatrix = [errorEstimateMatrix, errorEstimate];
 
@@ -173,7 +187,7 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         errorEstimateStr = sprintf(['%.', num2str(decimals), 'f'], errorEstimate);
 
         % vypíšeme odhadnutú chybu
-        disp(['     Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = ', errorEstimateStr, newline]);
+        disp(['     Odhadnutá chyba = ', errorEstimateStr, newline]);
 
         % Zapíšeme príslušné informácie o vykonanej bisekcií pre konkrétny
         % koreň
@@ -195,7 +209,7 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         % Velkosť intervalu
         fprintf(EquationTxt, "     Velkosť intervalu: %.*g\n", decimals, abs(upperBisectionBound - lowerBisectionBound));
         % Odhad chyby
-        fprintf(EquationTxt, "     Odhadnutá chyba použitím vzorca: |b - a| / 2^(k + 1) = %s\n", errorEstimateStr);
+        fprintf(EquationTxt, "     Odhadnutá chyba = %s\n", errorEstimateStr);
         fprintf(EquationTxt, "------------------------------------------------------------\n\n");
     end
 

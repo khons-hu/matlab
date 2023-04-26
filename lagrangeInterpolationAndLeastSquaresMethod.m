@@ -62,13 +62,18 @@ function lagrangeInterpolationAndLeastSquaresMethod()
 
             % Ak je počet bodov funkcie menší ako 6, použije sa Lagrangeova interpolácia
             if size(processedFunction, 1) < 6
-                % Skontrolujeme unikátnosť x-hodnôt
+                % vypocitame aproximaciu pomocou metody najmensich stvorcov a ulozime vysledky do suboru Aproximacia.txt
+                warning('off');
+                approximations{i} = performLeastSquaresMethodAndSaveResultsIntoFile(processedFunction(:, 1), processedFunction(:, 2), i);
+                % Skontrolujeme unikátnosť x-hodnôt, keďže Lagrangeova interpolácia vyžaduje unikátne x-hodnoty
                 [uniqueX, uniqueIndex] = unique(processedFunction(:, 1), 'first');
+                % Ak sa počet unikátnych x-hodnôt nerovná počtu riadkov v matici processedFunction,
                 if numel(uniqueX) ~= numel(processedFunction(:, 1))
                     % Ak sú nejaké duplicity, vyhodíme tie, ktoré majú väčšiu y-hodnoty
                     % Vytvoríme novú maticu, ktorá obsahuje iba unikátne x-hodnoty a y-hodnoty, ktoré patria k týmto x-hodnotám
                     disp('Vstupný súbor obsahuje duplicitné x-hodnoty. Budú použité tie, ktoré majú väčšiu y-hodnotu.');
                     disp('teda odstránime duplicitné x-hodnoty, ktoré majú menšiu y-hodnotu.');
+                    % Vytvoríme z processedFunction novú maticu, ktorá obsahuje iba unikátne x-hodnoty a y-hodnoty, ktoré patria k týmto x-hodnotám
                     processedFunction = processedFunction(uniqueIndex, :);
                 end
                 % vypocitame Lagrangeovu interpolaciu a ulozime vysledky do suboru Aproximacia.txt

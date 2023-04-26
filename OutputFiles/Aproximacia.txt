@@ -1,0 +1,185 @@
+
+#############################################
+Vstupný súbor DataAproximacie.txt 1. funkcia: 
+#############################################
+
+---------------------------
+Metóda najmenších štvorcov: 
+---------------------------
+
+Počet bodov pre aproximáciu: 4
+
+Aproximované body a ich funkčné hodnoty: 
+x(1) = -5,   f(x(1)) = -392
+x(2) = -1,   f(x(2)) = -12
+x(3) = 2,   f(x(3)) = 21
+x(4) = 3.5,   f(x(4)) = 128.625
+
+Koeficienty polynómu stupňa 1. pomocou metódy najmenších štvorcov: 
+   3863/67       -4229/75     
+
+
+Koeficienty polynómu stupňa 2. pomocou metódy najmenších štvorcov: 
+ -43144/6903      8563/181       1067/128    
+
+
+#############################################
+Vstupný súbor DataAproximacie.txt 1. funkcia: 
+#############################################
+
+--------------------------------
+Lagrangeov interpolačný polynóm: 
+--------------------------------
+
+Počet bodov pre aproximáciu: 4
+
+Aproximované body a ich funkčné hodnoty: 
+x(1) = -5,   f(x(1)) = -392
+x(2) = -1,   f(x(2)) = -12
+x(3) = 2,   f(x(3)) = 21
+x(4) = 3.5,   f(x(4)) = 128.625
+
+Koeficienty Lagrangeovho interpolačného polynómu: 
+       3              0              2             -7       
+
+#############################################
+Vstupný súbor DataAproximacie.txt 2. funkcia: 
+#############################################
+
+---------------------------
+Metóda najmenších štvorcov: 
+---------------------------
+
+Počet bodov pre aproximáciu: 6
+
+Aproximované body a ich funkčné hodnoty: 
+x(1) = -3,   f(x(1)) = -9
+x(2) = -2,   f(x(2)) = -9
+x(3) = -1,   f(x(3)) = -57
+x(4) = -2,   f(x(4)) = -54
+x(5) = 2,   f(x(5)) = -54
+x(6) = 5,   f(x(6)) = 471
+
+Koeficienty polynómu stupňa 1. pomocou metódy najmenších štvorcov: 
+   4279/80        4667/82     
+
+
+Koeficienty polynómu stupňa 2. pomocou metódy najmenších štvorcov: 
+   3021/151       7382/609      -6722/63     
+
+
+#############################################
+Vstupný súbor DataAproximacie.txt 3. funkcia: 
+#############################################
+
+---------------------------
+Metóda najmenších štvorcov: 
+---------------------------
+
+Počet bodov pre aproximáciu: 4
+
+Aproximované body a ich funkčné hodnoty: 
+x(1) = -2,   f(x(1)) = 56.5
+x(2) = 0.5,   f(x(2)) = -1
+x(3) = 1.5,   f(x(3)) = 4
+x(4) = 3,   f(x(4)) = 41.5
+
+Koeficienty polynómu stupňa 1. pomocou metódy najmenších štvorcov: 
+   -235/53        3029/106    
+
+
+Koeficienty polynómu stupňa 2. pomocou metódy najmenších štvorcov: 
+       8             -11            5/2      
+
+
+#############################################
+Vstupný súbor DataAproximacie.txt 3. funkcia: 
+#############################################
+
+--------------------------------
+Lagrangeov interpolačný polynóm: 
+--------------------------------
+
+Počet bodov pre aproximáciu: 4
+
+Aproximované body a ich funkčné hodnoty: 
+x(1) = -2,   f(x(1)) = 56.5
+x(2) = 0.5,   f(x(2)) = -1
+x(3) = 1.5,   f(x(3)) = 4
+x(4) = 3,   f(x(4)) = 41.5
+
+Koeficienty Lagrangeovho interpolačného polynómu: 
+       0              8             -11            5/2      
+
+#############################################
+Vstupný súbor DataAproximacie.txt 4. funkcia: 
+#############################################
+
+---------------------------
+Metóda najmenších štvorcov: 
+---------------------------
+
+Počet bodov pre aproximáciu: 5
+
+Aproximované body a ich funkčné hodnoty: 
+x(1) = 0.1,   f(x(1)) = 23.67
+x(2) = 0.5,   f(x(2)) = 19.75
+x(3) = 2.5,   f(x(3)) = 33.75
+x(4) = 7,   f(x(4)) = 270
+x(5) = 8,   f(x(5)) = 5.005
+
+Koeficienty polynómu stupňa 1. pomocou metódy najmenších štvorcov: 
+    557/40        3785/189    
+
+
+Koeficienty polynómu stupňa 2. pomocou metódy najmenších štvorcov: 
+  -2018/333       6689/106      -2749/209    
+
+
+#############################################
+Vstupný súbor DataAproximacie.txt 4. funkcia: 
+#############################################
+
+--------------------------------
+Lagrangeov interpolačný polynóm: 
+--------------------------------
+
+Počet bodov pre aproximáciu: 5
+
+Aproximované body a ich funkčné hodnoty: 
+x(1) = 0.1,   f(x(1)) = 23.67
+x(2) = 0.5,   f(x(2)) = 19.75
+x(3) = 2.5,   f(x(3)) = 33.75
+x(4) = 7,   f(x(4)) = 270
+x(5) = 8,   f(x(5)) = 5.005
+
+Koeficienty Lagrangeovho interpolačného polynómu: 
+   -733/671       2306/209      -3643/198       -569/283       1635/68     
+
+#############################################
+Vstupný súbor DataAproximacie.txt 5. funkcia: 
+#############################################
+
+---------------------------
+Metóda najmenších štvorcov: 
+---------------------------
+
+Počet bodov pre aproximáciu: 8
+
+Aproximované body a ich funkčné hodnoty: 
+x(1) = -3,   f(x(1)) = 130
+x(2) = 2,   f(x(2)) = 25
+x(3) = -1,   f(x(3)) = 46
+x(4) = 0,   f(x(4)) = 25
+x(5) = 2,   f(x(5)) = 35
+x(6) = 5,   f(x(6)) = 130
+x(7) = 7,   f(x(7)) = 270
+x(8) = 11,   f(x(8)) = 718
+
+Koeficienty polynómu stupňa 1. pomocou metódy najmenších štvorcov: 
+   5953/142       7829/151    
+
+
+Koeficienty polynómu stupňa 2. pomocou metódy najmenších štvorcov: 
+   3499/504      -4515/332       4394/165    
+

@@ -122,6 +122,13 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         % začiatok merania času
         endTime = tic;
         errTime = 0;
+
+        fprintf(EquationTxt, "%d. krok\n", k);
+        fprintf(EquationTxt, "     x%d = %g\n", k, x0);
+        fprintf(EquationTxt, "     f(x%d) = %g\n", k, f(x0));
+        fprintf(EquationTxt, "     f'(x%d) = %g\n", k, f1(x0));
+        fprintf(EquationTxt, "     Zastavovacia podmienka = %g\n\n", Stop);
+
         while (Stop > 0 || errorEstimate > epsilon)
 
             % Limitujeme počet iterácií na 1000
@@ -157,11 +164,11 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
             % čas pre veci ktore nie su sucastou algoritmu
             errorTime = tic;
 
-            fprintf(EquationTxt, "     %d. krok\n", k);
+            fprintf(EquationTxt, "%d. krok\n", k);
             fprintf(EquationTxt, "     x%d = %g\n", k, x0);
             fprintf(EquationTxt, "     f(x%d) = %g\n", k, f(x0));
             fprintf(EquationTxt, "     f'(x%d) = %g\n", k, f1(x0));
-            fprintf(EquationTxt, "     Zastavovacia podmienka = %g\n\n", Stop);
+            fprintf(EquationTxt, "     Zastavovacia podmienka = %g\n", Stop);
 
             % Odhad chyby Newtonovej metódy
             % pomocná premenná m na minimum absolutnej hodnoty prvej derivacie
@@ -189,6 +196,12 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
 
             % Odhad chyby Newtonovej metódy
             errorEstimate = abs(newtonOutputMatrix(end, 4)) / m1
+
+            if isnan(errorEstimate)
+                fprintf(EquationTxt, "     Odhad chyby sa nedalo vypočítať\n\n");
+            else
+                fprintf(EquationTxt, "     Odhad chyby = %g\n\n", errorEstimate);
+            end
 
             errTime = errTime + toc(errorTime);
         end
@@ -273,7 +286,7 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         fprintf(EquationTxt, '---------------------------\n');
 
         % konkrétny koreň ktorý sme našli
-        fprintf(EquationTxt, "\n   Koreň: %.*g\n", decimals, x0);
+        fprintf(EquationTxt, "   Koreň: %.*g\n", decimals, x0);
         % funkčná hodnota pre koreň
         fprintf(EquationTxt, "     Funkčná hodnota pre koreň: %.*g\n", decimals, f(x0));
         % epsilon
@@ -288,9 +301,9 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         fprintf(EquationTxt, '     Hodnota zastavenia: %s\n', stopStr);
         % Zapíšeme odhad chyby Newtonovej metódy do súboru
         if isnan(errorEstimate)
-            fprintf(EquationTxt, ['     Odhad absolútnej chyby pre Newtonovu metódu sa nepodarilo vypočítať.\n']);
+            fprintf(EquationTxt, '     Odhad absolútnej chyby pre Newtonovu metódu sa nepodarilo vypočítať.\n');
         else
-            fprintf(EquationTxt, ['     Odhad absolútnej chyby pre Newtonovu metódu je ER = ', errorEstimateStr, '.\n']);
+            fprintf(EquationTxt, '     Odhad absolútnej chyby pre Newtonovu metódu je ER = %s.\n', errorEstimateStr);
         end
     end
 

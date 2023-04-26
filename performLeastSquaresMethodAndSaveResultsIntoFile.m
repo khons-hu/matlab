@@ -7,8 +7,6 @@ function result = performLeastSquaresMethodAndSaveResultsIntoFile(xValues, yValu
     disp(['Vstupný súbor DataAproximacie.txt ', num2str(iterator), '. funkcia']);
     disp(['-------------------------------------------', newline]);
 
-    disp(['Keďže počet bodov je väčšie alebo rovná sa 6, použijeme metódu najmenších štvorcov.', newline]);	
-
     disp(['--------------------------------']);
     disp(['Metóda najmenších štvorcov: ']);
     disp(['--------------------------------', newline]);
@@ -38,12 +36,12 @@ function result = performLeastSquaresMethodAndSaveResultsIntoFile(xValues, yValu
     disp('Aproximované body:')
 
     % Výpis do súboru Aproximacia.txt
-    fprintf(AproximationTxt, 'Aproximované body:\n');
+    fprintf(AproximationTxt, 'Aproximované body a ich funkčné hodnoty: \n');
 
     % Vypis bodov ktoré budeme aproximovať
     for i = 1:numPoints
-        disp(['x(', num2str(i), ') = ', num2str(xValues(i)), ', f(', num2str(i), ') = ', num2str(yValues(i))]);
-        fprintf(AproximationTxt, 'x(%d) = %s, f(%d) = %s\n', i, num2str(xValues(i)), i, num2str(yValues(i)));
+        disp(['x(', num2str(i), ') = ', num2str(xValues(i)), ', f(x(', num2str(i), ')) = ', num2str(yValues(i))]);
+        fprintf(AproximationTxt, 'x(%d) = %s,   f(x(%d)) = %s\n', i, num2str(xValues(i)), i, num2str(yValues(i)));
     end
 
     pause(1);
@@ -102,7 +100,7 @@ function result = performLeastSquaresMethodAndSaveResultsIntoFile(xValues, yValu
     % Výpis do konzoly
     disp(['Koeficienty polynómu stupňa ', num2str(1), ' pomocou metódy najmenších štvorcov:']);
     for i = 1:length(P)
-        disp(['a_', num2str(length(P) - i), ' = ', num2str(P(i))]);
+        disp(['koeficient_', num2str(length(P) - i), ' = ', num2str(P(i))]);
     end
     disp(newline);
 
@@ -153,7 +151,7 @@ function result = performLeastSquaresMethodAndSaveResultsIntoFile(xValues, yValu
     % Výpis do konzoly
     disp(['Koeficienty polynómu stupňa ', num2str(2), ' pomocou metódy najmenších štvorcov:']);
     for i = 1:length(P)
-        disp(['a_', num2str(length(P) - i), ' = ', num2str(P(i))]);
+        disp(['koeficient_', num2str(length(P) - i), ' = ', num2str(P(i))]);
     end
     disp(newline);
 

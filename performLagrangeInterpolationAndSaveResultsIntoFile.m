@@ -7,7 +7,7 @@ function results = performLagrangeInterpolationAndSaveResultsIntoFile(xValues, y
     disp(['Vstupný súbor DataAproximacie.txt ', num2str(iterator), '. funkcia']);
     disp(['-------------------------------------------', newline]);
 
-    disp(['Keďže počet bodov je menší ako 6, použijeme Lagrangeovu interpoláciu.', newline]);	
+    disp(['Keďže počet bodov je menší ako 6, použijeme aj Lagrangeovu interpoláciu.', newline]);
 
     disp(['--------------------------------']);
     disp(['Lagrangeov interpolačný polynóm: ']);
@@ -75,7 +75,7 @@ function results = performLagrangeInterpolationAndSaveResultsIntoFile(xValues, y
     format rat
 
     % Výpis do konzoly
-    disp('Koeficienty Lagrangeovho interpolačného polynómu L_n: ');
+    disp('Koeficienty Lagrangeovho interpolačného polynómu: ');
     % Vypis koeficientov Lagrangeovho polynómu
     % strtrim odstráni medzery na začiatku a na konci reťazca
     % rats zobrazí čísla v racionalnom formáte
@@ -88,13 +88,13 @@ function results = performLagrangeInterpolationAndSaveResultsIntoFile(xValues, y
     end
 
     % Vypis bodov, ktore boli aproximovane do súboru Aproximacia.txt
-    fprintf(AproximationTxt, 'Aproximované body:\n');
+    fprintf(AproximationTxt, 'Aproximované body a ich funkčné hodnoty: \n');
     for i = 1:numPoints
-        fprintf(AproximationTxt, 'x(%d) = %s, f(%d) = %s\n', i, num2str(xValues(i)), i, num2str(yValues(i)));
+        fprintf(AproximationTxt, 'x(%d) = %s,   f(x(%d)) = %s\n', i, num2str(xValues(i)), i, num2str(yValues(i)));
     end
 
     % Výpis do súboru Aproximacia.txt
-    fprintf(AproximationTxt, '\nKoeficienty Lagrangeovho interpolačného polynómu L_n: \n');
+    fprintf(AproximationTxt, '\nKoeficienty Lagrangeovho interpolačného polynómu: \n');
 
     % zapis koeficientov Lagrangeovho polynómu
     for i = 1:length(LagrangePolynomial)
