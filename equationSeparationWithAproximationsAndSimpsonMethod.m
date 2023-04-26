@@ -12,11 +12,14 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
 
         % Výpis o vstupu
         disp('Váš vstupný súbor so vstupnými parametrami pre vašu rovnicu a pre určitý integrál vyzerá nasledovne: ');
+        disp('V prípade malého matlab okienka je možné, že sa vám vstupný súbor vypíše s iným formátovaním.');
         disp(DataParametersInputMatrix);
+        pause(1);
 
         disp('Kde štruktúra jeho riadkov je: info, a, b, c, d, k, p, q, r, s, LB, UB, ε (teda má 13 stĺpcov).');
         disp('Pre úlohy s rovnicou a s aproximáciami budú používané riadky, prektoré je hodnota info rovná 1,' );
         disp(['pre úlohu na výpočet určitého integrálu budú používané, pre ktoré je hodnota info rovná 2', newline]);
+        pause(1);
     else
         disp('Váš vstupný súbor so vstupnými parametrami pre vašu rovnicu a pre určitý integrál neexistuje.');
         disp('Vytvorte si súbor DataParametre.txt v priečinku InputFiles a spustite program znovu.');
@@ -33,6 +36,7 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
     disp('Kde "x" je neznáma premenná a "a", "b", "c", "d" sú reálne parametre.');
     disp(['Aspoň dva (2) z parametrov b, c, d sú nenulové a parameter a je vždy nenulový.', newline]);
     disp(['######################################################################################', newline]);
+    pause(2);
 
     % ----------------------------------------------------------------------------------------------------------------------------
 
@@ -133,9 +137,33 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                         end
                     end
 
+                    % Zapíšeme do súboru Rovnica.txt že na ktorom riadku sa
+                    % nachádzame v stupnom matici
+
+                    % Otvoríme, prípadne vytvoríme súbor Rovnica.txt v adresári OutputFiles
+                    % (v režimu append, zaručuje aby sa to vytvorilo v prípade ak to neexistuje)
+                    EquationTxt = fopen('OutputFiles/Rovnica.txt', 'a');
+                
+                    % Zapíšeme relevantné informácie do súboru Rovnica.txt
+                    fprintf(EquationTxt, "\n");
+                    fprintf(EquationTxt, "##########################################################\n");
+                    fprintf(EquationTxt, "###     Vstupný súbor Dataparametre.txt %d. riadok      ###\n", iterator);
+                    fprintf(EquationTxt, "##########################################################\n");
+                    fprintf(EquationTxt, "\n");
+
+                    if checkDuplicityOfRoots(parameterA, parameterB, parameterC, parameterD)
+                        disp('Rovnica má duplicitné koreňe, pokračujem s ďaľším riadkom.');
+                        fprintf(EquationTxt, "Rovnica má duplicitné korene, pokračoval som s ďaľším riadkom.\n\n");
+                        continue;
+                    end
+
+                    fclose(EquationTxt);
+
+
                     % Zadefinujeme našu rovnicu a * x^3 + b * x^2 + c * x + d = 0 vo forme
                     % anonymnej funkcie s jedným parametrom x a s našimi zadanými reálnymi parametrami
                     f = @(x) (parameterA * x.^3 + parameterB * x.^2 + parameterC * x + parameterD);
+
                     % výpisom zobrazíme zápis rovnice používateľovi s hláškou
                     % že funkcia bola zadefinovaná ako anonynmná funkcia v
                     % matlabe
@@ -173,21 +201,6 @@ function equationSeparationWithAproximationsAndSimpsonMethod()
                         % pokračujeme s ďalším riadkom
                         continue;
                     end
-
-                    % Zapíšeme do súboru Rovnica.txt že na ktorom riadku sa
-                    % nachádzame v stupnom matici
-
-                    % Otvoríme, prípadne vytvoríme súbor Rovnica.txt v adresári OutputFiles
-                    % (v režimu append, zaručuje aby sa to vytvorilo v prípade ak to neexistuje)
-                    EquationTxt = fopen('OutputFiles/Rovnica.txt', 'a');
-                
-                    % Zapíšeme relevantné informácie do súboru Rovnica.txt
-                    fprintf(EquationTxt, "\n");
-                    fprintf(EquationTxt, "##########################################################\n");
-                    fprintf(EquationTxt, "###     Vstupný súbor Dataparametre.txt %d. riadok      ###\n", iterator);
-                    fprintf(EquationTxt, "##########################################################\n");
-                    fprintf(EquationTxt, "\n");
-                    fclose(EquationTxt);
 
                     % získanie intervalov od používateľa, ich uloženie do
                     % matice intervals so stlpcami koreň, dolná hranica, horná
@@ -1584,5 +1597,35 @@ function isInputMatrixValid = checkValidityOfInputMatrix(DataParametersInputMatr
         disp('Vstupný súbor neobsahuje správny počet stĺpcov (13) alebo je prázdny.');
         disp('Pokračujem s ďalšou úlohou...');
         isInputMatrixValid = false;
+    end
+end
+
+function hasMultipleRoots = checkDuplicityOfRoots(a, b, c, d)
+    % Výpočet koreňov polynómu
+    rootsVec = roots([a, b, c, d]); 
+
+    % Zistenie dvojitých koreňov, zastavíme to na veľmi malé číslo
+    tolerance = 1e-6; 
+    % Získanie počtu koreňov v rootsVe
+    numRoots = numel(rootsVec);
+    % inicializácia premennej hasMultipleRoots na false
+    hasMultipleRoots = false;
+
+    % Prechádzame cez všetky korene okrem posledného
+    for i = 1:numRoots-1
+         % Prechádzame cez zvyšné korene za i-tym
+        for j = i+1:numRoots
+            % Porovnávame korene s toleranciou
+            if abs(rootsVec(i) - rootsVec(j)) < tolerance 
+                % Ak sú dva korene blízko seba (podľa tolerancie), nastavíme hasMultipleRoots na true
+                hasMultipleRoots = true; 
+                break;
+            end
+        end
+        % Ak sme už našli dvojitý koreň
+        if hasMultipleRoots
+            % Ukončíme vonkajší cyklus
+            break;
+        end
     end
 end

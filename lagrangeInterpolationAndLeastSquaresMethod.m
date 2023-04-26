@@ -13,10 +13,13 @@ function lagrangeInterpolationAndLeastSquaresMethod()
         % Výpis o vstupu
         disp('Váš vstupný súbor so vstupnými parametrami pre metódu najmenších štvorcov polynómom prvého a druhého stupňa funkcie');
         disp(', aj pre aproximáciu s Lagrangeovým interpolačným polynómom.');
+        disp('V prípade malého matlab okienka je možné, že sa vám vstupný súbor vypíše s iným formátovaním.');
         disp(DataAproximationsInputMatrix);
+        pause(1);
 
         disp('Kde štruktúra jeho riadkov je: hodnoty funkcií sú zadané vždy vo dvoch stĺpcoch (argument xi a funkčná hodnota f(xi)).')
         disp('Tzn. ak napr. súbor obsahuje 6 stĺpcov, tak reprezentuje 3 rôzne funkcie. Každá dvojica stĺpcov reprezentujúca jednu funkciu musí mať rovnaký rozmer');
+        pause(1);
     else
         disp('Váš vstupný súbor so vstupnými parametrami pre metódu najmenších štvorcov');
         disp('a pre aproximáciu s Lagrangeovým interpolačným polynómom neexistuje.');
@@ -61,11 +64,12 @@ function lagrangeInterpolationAndLeastSquaresMethod()
             if size(processedFunction, 1) < 6
                 % Skontrolujeme unikátnosť x-hodnôt
                 [uniqueX, uniqueIndex] = unique(processedFunction(:, 1), 'first');
-                if numel(uniqueX) ~= size(processedFunction, 1)
-                    % Ak sú nejaké duplicity, vyhodíme tie, ktoré majú väčšiu y-hodnotu
-                    [~, maxIndex] = max(processedFunction(uniqueIndex, 2));
+                if numel(uniqueX) ~= numel(processedFunction(:, 1))
+                    % Ak sú nejaké duplicity, vyhodíme tie, ktoré majú väčšiu y-hodnoty
                     % Vytvoríme novú maticu, ktorá obsahuje iba unikátne x-hodnoty a y-hodnoty, ktoré patria k týmto x-hodnotám
-                    processedFunction = processedFunction(uniqueIndex(maxIndex), :);
+                    disp('Vstupný súbor obsahuje duplicitné x-hodnoty. Budú použité tie, ktoré majú väčšiu y-hodnotu.');
+                    disp('teda odstránime duplicitné x-hodnoty, ktoré majú menšiu y-hodnotu.');
+                    processedFunction = processedFunction(uniqueIndex, :);
                 end
                 % vypocitame Lagrangeovu interpolaciu a ulozime vysledky do suboru Aproximacia.txt
                 approximations{i} = performLagrangeInterpolationAndSaveResultsIntoFile(processedFunction(:, 1), processedFunction(:, 2), i);

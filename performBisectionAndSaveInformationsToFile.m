@@ -42,14 +42,14 @@ function [bisectionOutputMatrix, timeOfBisection, errorEstimateMatrix, bisection
         % premenná iterator, slúži to ako krok, po vykonaní počet krokov
         iterator = 0;
 
-        % premenná middle, kďe budeme ukladať stred a po vykonaní bisekcie to
-        % bude náš nájdený koreň funkcie pomocou bisekcie
-        middle = 0;
-
         % dolná hranica bude z daného riadku kde sa nachádzame druhý stlpec
         lowerBisectionBound = intervals(root, 2);
         % horná hranica bude z daného riadku kde sa nachádzame tretí stlpec
         upperBisectionBound = intervals(root, 3);
+
+        % premenná middle, kďe budeme ukladať stred a po vykonaní bisekcie to
+        % bude náš nájdený koreň funkcie pomocou bisekcie
+        middle = (lowerBisectionBound + upperBisectionBound) / 2;
 
         % Zapíšeme interval, ktorý bol použitý v bisekcii
         fprintf(EquationTxt, "\n%d. Interval: [%g, %g]\n\n", root, lowerBisectionBound, upperBisectionBound);

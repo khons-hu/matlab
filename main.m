@@ -14,6 +14,17 @@ function main()
     fid = fopen('OutputFiles/Integral.txt', 'w');       fclose(fid);
     fid = fopen('OutputFiles/Aproximacia.txt', 'w');    fclose(fid);
 
+    % inicializácia ascii art na začiatku programu
+    ascii_art = ['                                                                  ______  ___ ______  ___   _   _ _____ _____       _____  __  ', newline, ...
+                '                                                                 |___  / / _ \|  _  \/ _ \ | \ | |_   _|  ___|     |  _  |/  | ', newline, ...
+                '                                                                    / / / /_\ \ | | / /_\ \|  \| | | | | |__ ______| |/' '|`| | ', newline, ...
+                '                                                                   / /  |  _  | | | |  _  || . ` | | | |  __|______|  /| | | | ', newline, ...
+                '                                                                 ./ /___| | | | |/ /| | | || |\  |_| |_| |___      \ |_/ /_| |_ ', newline, ...
+                '                                                                 \_____/\_| |_/___/ \_| |_/\_| \_/\___/\____/       \___/ \___/ ', newline];
+
+    % výpis ascii art do konzoly
+    disp(ascii_art)
+
     % while cyklus 
     % cyklus sa opakuje, kým používateľ nezadá na konci úlohy že už nechce znova spustiť "program" (hlavnú funkciu)
     while true

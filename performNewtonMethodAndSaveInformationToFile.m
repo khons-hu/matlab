@@ -22,6 +22,9 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
     %errorEstimateMatrix kde uložíme odhady absolútnej chyby
     errorEstimateMatrix = [];
 
+    % errorEstimate - hodnota odhadu absolútnej chyby
+    errorEstimate = 0;
+
     % Zapíšeme informácií o Newtonovej metóde do súboru
     fprintf(EquationTxt, "\n\n");
     fprintf(EquationTxt, "----------------------------------------------------\n");
@@ -185,7 +188,7 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
             m1 = min(abs(f1(m)), abs(f1(M)));
 
             % Odhad chyby Newtonovej metódy
-            errorEstimate = abs(newtonOutputMatrix(end, 4)) / m1;
+            errorEstimate = abs(newtonOutputMatrix(end, 4)) / m1
 
             errTime = errTime + toc(errorTime);
         end
@@ -257,7 +260,11 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         disp(['     Doľná hranica: ', num2str(a_interval)]);
         disp(['     Horná hranica: ', num2str(b_interval)]);
         disp(['     Hodnota zastavenia: ', stopStr, newline]);
-        disp(['     Odhad absolútnej chyby pre Newtonovu metódu je ER = ', errorEstimateStr, '.']);
+        if isnan(errorEstimate)
+            disp(['     Odhad absolútnej chyby pre Newtonovu metódu sa nepodarilo vypočítať.']);
+        else
+            disp(['     Odhad absolútnej chyby pre Newtonovu metódu je ER = ', errorEstimateStr, '.']);
+        end
 
         % Zapíšeme príslušné informácie o vykonanej Newtonovej metóde pre konkrétny
 
@@ -280,7 +287,11 @@ function [newtonOutputMatrix, timeOfNewtonMethod, errorEstimateMatrix, newtonRoo
         % hodnota zastavenia
         fprintf(EquationTxt, '     Hodnota zastavenia: %s\n', stopStr);
         % Zapíšeme odhad chyby Newtonovej metódy do súboru
-        fprintf(EquationTxt, '     Odhad absolútnej chyby pre Newtonovu metódu je ER = %s.\n', errorEstimateStr);
+        if isnan(errorEstimate)
+            fprintf(EquationTxt, ['     Odhad absolútnej chyby pre Newtonovu metódu sa nepodarilo vypočítať.\n']);
+        else
+            fprintf(EquationTxt, ['     Odhad absolútnej chyby pre Newtonovu metódu je ER = ', errorEstimateStr, '.\n']);
+        end
     end
 
     % Vypíšeme čas newtonovej metódy používateľovi a zapíšeme to aj do súboru
